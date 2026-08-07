@@ -32,7 +32,7 @@ class TesteViewModel() : ViewModel() {
     private val _uiState = MutableStateFlow(CoinUiState())
     val uiState: StateFlow<CoinUiState> = _uiState.asStateFlow()
 
-    fun loadCoins(vsCurrency: String = "usd") {
+    fun loadCoins() {
         viewModelScope.launch {
             _uiState.update {
                 it.copy(
@@ -42,7 +42,7 @@ class TesteViewModel() : ViewModel() {
             }
 
             runCatching {
-                _repository.getCoins(vsCurrency = vsCurrency)
+                _repository.getCoins()
             }.onSuccess { coins ->
                 _uiState.update {
                     it.copy(

@@ -10,66 +10,28 @@ import com.cryptowallet.model.toCoinChartPointOrNull
 import com.cryptowallet.model.toCoinDashboard
 import com.cryptowallet.model.toCoinListItem
 
-class CoinGeckoRepository(
-    private val service: CoinGeckoService,
-) {
+class CoinGeckoRepository(private val service: CoinGeckoService) {
 
-    suspend fun getCoins(
-        vsCurrency: String = "usd",
-    ): List<CoinListItem> {
-        return service
-            .getAllCoins(vsCurrency = vsCurrency)
-            .map { it.toCoinListItem() }
+    suspend fun getCoins(): List<CoinListItem> {
+        return service.getAllCoins().map{ it.toCoinListItem() }
     }
 
-    suspend fun getCoinDashboard(
-        coinId: String,
-        vsCurrency: String = "usd",
-    ): CoinDashboard {
-        val coin = service
-            .getCoinById(vsCurrency = vsCurrency, ids = coinId)
-            .firstOrNull()
-            ?: error("Moeda não encontrada para o id: $coinId")
-
+    suspend fun getCoinDashboard(coinId: String): CoinDashboard {
+        val coin = service.getCoinById(ids = coinId).firstOrNull() ?: error("Moeda não encontrada para o id: $coinId")
         return coin.toCoinDashboard()
     }
 
-    suspend fun getCoinChart(
-        coinId: String,
-        range: ChartRange,
-        vsCurrency: String = "usd",
-    ): List<CoinChartPoint> {
-        return service
-            .getCoinOhlcGraph(
-                id = coinId,
-                vsCurrency = vsCurrency,
-                days = range.apiDays,
-            )
+    suspend fun getCoinChart(coinId: String, range: ChartRange): List<CoinChartPoint> {
+        return service.getCoinOhlcGraph(id = coinId, days = range.apiDays)
             .mapNotNull { it.toCoinChartPointOrNull() }
             .sortedBy { it.timestamp }
     }
 
-    suspend fun getCoinDashboardPayload(
-        coinId: String,
-        range: ChartRange = ChartRange.ONE_DAY,
-        vsCurrency: String = "usd",
-    ): CoinDashboardPayload {
-        val dashboard = getCoinDashboard(
-            coinId = coinId,
-            vsCurrency = vsCurrency,
-        )
+    suspend fun getCoinDashboardPayload(coinId: String, range: ChartRange = ChartRange.ONE_DAY): CoinDashboardPayload {
+        val dashboard = getCoinDashboard(coinId = coinId)
+        val chartPoints = getCoinChart(coinId = coinId, range = range)
 
-        val chartPoints = getCoinChart(
-            coinId = coinId,
-            range = range,
-            vsCurrency = vsCurrency,
-        )
-
-        return CoinDashboardPayload(
-            dashboard = dashboard,
-            selectedRange = range,
-            chartPoints = chartPoints,
-        )
+        return CoinDashboardPayload(dashboard = dashboard, selectedRange = range, chartPoints = chartPoints)
     }
 }
 

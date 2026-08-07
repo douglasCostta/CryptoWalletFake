@@ -4,18 +4,9 @@ import com.cryptowallet.data.remote.api.CoinGeckoApi
 
 class CoinGeckoService (private val api: CoinGeckoApi) {
 
-    suspend fun getAllCoins(
-        vsCurrency: String = "usd"
-    ) = api.getAllCoins(vsCurrency)
+    suspend fun getAllCoins() = api.getAllCoins()
 
-    suspend fun getCoinById(
-        vsCurrency: String = "usd",
-        ids: String = "bitcoin"
-    ) = api.getCoinById(vsCurrency, ids)
+    suspend fun getCoinById(ids: String = "bitcoin") = api.getCoinById(ids)
 
-    suspend fun getCoinOhlcGraph(
-        id: String = "bitcoin",
-        vsCurrency: String = "usd",
-        days: String = "1"
-    ) = api.getCoinOhlcGraph(id, vsCurrency, days)
+    suspend fun getCoinOhlcGraph(id: String = "bitcoin", days: String = "1") = api.getCoinOhlcGraph(id, days)
 }
