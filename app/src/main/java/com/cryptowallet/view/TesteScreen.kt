@@ -94,7 +94,7 @@ fun TesteScreen(viewModel: TesteViewModel = viewModel()) {
 						)
 						Spacer(modifier = Modifier.height(4.dp))
 						Text(
-							text = "Toque em uma moeda para testar a seleção.",
+							text = "Teste lista de moedas.",
 							style = MaterialTheme.typography.bodyMedium,
 							color = MaterialTheme.colorScheme.onSurfaceVariant,
 						)
