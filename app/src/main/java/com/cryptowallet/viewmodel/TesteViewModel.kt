@@ -6,7 +6,7 @@ import com.cryptowallet.data.remote.RetrofitInstance
 import com.cryptowallet.data.remote.service.CoinGeckoService
 import com.cryptowallet.data.repository.CoinGeckoRepository
 import com.cryptowallet.model.ChartRange
-import com.cryptowallet.model.CoinDashboardPayload
+import com.cryptowallet.model.GraphCoinDashboard
 import com.cryptowallet.model.CoinListItem
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -19,7 +19,7 @@ data class CoinUiState(
     val isLoadingDashboard: Boolean = false,
     val coins: List<CoinListItem> = emptyList(),
     val selectedCoinId: String? = null,
-    val dashboardPayload: CoinDashboardPayload? = null,
+    val dashboardPayload: GraphCoinDashboard? = null,
     val selectedRange: ChartRange = ChartRange.ONE_DAY,
     val errorMessage: String? = null,
 )

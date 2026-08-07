@@ -4,8 +4,8 @@ import com.cryptowallet.data.remote.service.CoinGeckoService
 import com.cryptowallet.model.ChartRange
 import com.cryptowallet.model.CoinChartPoint
 import com.cryptowallet.model.CoinDashboard
-import com.cryptowallet.model.CoinDashboardPayload
 import com.cryptowallet.model.CoinListItem
+import com.cryptowallet.model.GraphCoinDashboard
 import com.cryptowallet.model.toCoinChartPointOrNull
 import com.cryptowallet.model.toCoinDashboard
 import com.cryptowallet.model.toCoinListItem
@@ -27,11 +27,11 @@ class CoinGeckoRepository(private val service: CoinGeckoService) {
             .sortedBy { it.timestamp }
     }
 
-    suspend fun getCoinDashboardPayload(coinId: String, range: ChartRange = ChartRange.ONE_DAY): CoinDashboardPayload {
+    suspend fun getCoinDashboardPayload(coinId: String, range: ChartRange = ChartRange.ONE_DAY): GraphCoinDashboard {
         val dashboard = getCoinDashboard(coinId = coinId)
         val chartPoints = getCoinChart(coinId = coinId, range = range)
 
-        return CoinDashboardPayload(dashboard = dashboard, selectedRange = range, chartPoints = chartPoints)
+        return GraphCoinDashboard(dashboard = dashboard, selectedRange = range, chartPoints = chartPoints)
     }
 }
 

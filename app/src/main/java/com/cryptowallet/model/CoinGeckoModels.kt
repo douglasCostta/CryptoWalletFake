@@ -66,7 +66,7 @@ data class CoinChartPoint(
     val close: Double,
 ) : Serializable
 
-data class CoinDashboardPayload(
+data class GraphCoinDashboard(
     val dashboard: CoinDashboard,
     val selectedRange: ChartRange,
     val chartPoints: List<CoinChartPoint>,
