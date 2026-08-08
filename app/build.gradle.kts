@@ -51,6 +51,7 @@ dependencies {
     implementation("androidx.compose.material:material-icons-extended:1.7.8")
     implementation("androidx.navigation:navigation-compose:2.9.8")
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.11.0")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.11.0")
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -58,4 +59,12 @@ dependencies {
     androidTestImplementation(libs.androidx.compose.ui.test.junit4)
     debugImplementation(libs.androidx.compose.ui.tooling)
     debugImplementation(libs.androidx.compose.ui.test.manifest)
+
+    // para consumir API REST
+    implementation("com.squareup.retrofit2:retrofit:2.11.0")
+    implementation("com.squareup.retrofit2:converter-gson:2.11.0")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.8.1")
+    implementation("io.coil-kt:coil-compose:2.6.0")
+    implementation("com.patrykandpatrick.vico:compose:2.0.0")
+    implementation("com.patrykandpatrick.vico:core:2.0.0")
 }
