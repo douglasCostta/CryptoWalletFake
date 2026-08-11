@@ -17,7 +17,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 data class DashboardUiState(
-    val coinSelected: String = "bitcoin",
+    val coinSelected: String = "bitcoin", //TODO: obter da tela HOME
     val selectedRange: ChartRangeEnum = ChartRangeEnum.TODAY,
     var isLoadingCoins: Boolean = false,
     var errorMessage: String? = null,
@@ -29,7 +29,8 @@ data class DashboardUiState(
     val coinName: String = "",
     val currentPrice: Double = 0.0,
     val priceChange24h: Double = 0.0,
-    val priceChangePercentage24h: Double = 0.0
+    val priceChangePercentage24h: Double = 0.0,
+    val symbol: String = ""
 )
 
 class DashboardViewModel() : ViewModel() {
@@ -146,7 +147,8 @@ class DashboardViewModel() : ViewModel() {
         _uiState.update { it.copy(
                 isLoadingCoins = false,
                 graphPoints = points,
-                errorMessage = null
+                errorMessage = null,
+                symbol = symbol
             )
         }
         setupWebSocket(symbol, range)

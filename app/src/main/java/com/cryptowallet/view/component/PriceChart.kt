@@ -130,6 +130,5 @@ fun PriceChart(
         scrollState = rememberVicoScrollState(scrollEnabled = false),
         modifier = modifier
             .fillMaxWidth()
-            .background(Color(0xFF1C1C1E))
     )
 }
