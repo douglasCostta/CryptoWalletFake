@@ -1,5 +1,6 @@
 package com.cryptowallet.data.repository
 
+import com.cryptowallet.data.remote.constants.CurrencyConstants
 import com.cryptowallet.data.remote.service.CoinGeckoService
 import com.cryptowallet.model.ChartRange
 import com.cryptowallet.model.CoinChartPoint
@@ -12,8 +13,16 @@ import com.cryptowallet.model.toCoinListItem
 
 class CoinGeckoRepository(private val service: CoinGeckoService) {
 
-    suspend fun getCoins(): List<CoinListItem> {
-        return service.getAllCoins().map{ it.toCoinListItem() }
+    suspend fun getCoins(vsCurrency: String = CurrencyConstants.DEFAULT_VS_CURRENCY): List<CoinListItem> {
+        return service.getAllCoins(vsCurrency = vsCurrency).map { it.toCoinListItem() }
+    }
+
+    suspend fun getCoinsByIds(
+        ids: List<String>,
+        vsCurrency: String = CurrencyConstants.DEFAULT_VS_CURRENCY,
+    ): List<CoinListItem> {
+        if (ids.isEmpty()) return emptyList()
+        return service.getCoinById(vsCurrency = vsCurrency, ids = ids.joinToString(",")).map { it.toCoinListItem() }
     }
 
     suspend fun getCoinDashboard(coinId: String): CoinDashboard {

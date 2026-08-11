@@ -33,6 +33,23 @@ private val LightColorScheme = lightColorScheme(
     */
 )
 
+// The Wallet flow has its own fixed brand look (dark background, orange/amber accent),
+// independent of the device's theme or wallpaper-derived dynamic colors.
+private val WalletColorScheme = darkColorScheme(
+    primary = WalletOrangeStart,
+    onPrimary = WalletTextPrimary,
+    secondary = WalletOrangeEnd,
+    background = WalletBackground,
+    onBackground = WalletTextPrimary,
+    surface = WalletSurface,
+    onSurface = WalletTextPrimary,
+    surfaceVariant = WalletSurface,
+    onSurfaceVariant = WalletTextSecondary,
+    error = WalletNegative,
+    onError = WalletTextPrimary,
+    outline = WalletCardBorder,
+)
+
 @Composable
 fun CryptoWalletTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
@@ -54,5 +71,18 @@ fun CryptoWalletTheme(
         colorScheme = colorScheme,
         typography = Typography,
         content = content
+    )
+}
+
+/**
+ * Fixed dark/orange brand theme for the Wallet flow, matching the Wallet mockups.
+ * Ignores device theme/dynamic color so the flow always renders consistently.
+ */
+@Composable
+fun WalletTheme(content: @Composable () -> Unit) {
+    MaterialTheme(
+        colorScheme = WalletColorScheme,
+        typography = Typography,
+        content = content,
     )
 }

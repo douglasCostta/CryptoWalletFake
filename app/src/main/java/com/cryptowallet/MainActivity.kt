@@ -4,37 +4,30 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import com.cryptowallet.ui.theme.CryptoWalletTheme
-import com.cryptowallet.view.TesteScreen
+import com.cryptowallet.data.local.WalletLocalDataSource
+import com.cryptowallet.data.local.walletDataStore
+import com.cryptowallet.data.remote.RetrofitInstance
+import com.cryptowallet.data.remote.service.CoinGeckoService
+import com.cryptowallet.data.repository.CoinGeckoRepository
+import com.cryptowallet.data.repository.WalletRepository
+import com.cryptowallet.data.repository.WalletRepositoryImpl
+import com.cryptowallet.navigation.CryptoWalletNavHost
+import com.cryptowallet.ui.theme.WalletTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+
+        val walletRepository: WalletRepository = WalletRepositoryImpl(
+            coinGeckoRepository = CoinGeckoRepository(CoinGeckoService(RetrofitInstance.api)),
+            localDataSource = WalletLocalDataSource(applicationContext.walletDataStore),
+        )
+
         setContent {
-            CryptoWalletTheme {
-                TesteScreen()
+            WalletTheme {
+                CryptoWalletNavHost(walletRepository = walletRepository)
             }
         }
-    }
-}
-
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    CryptoWalletTheme {
-        Greeting("Android")
     }
 }
