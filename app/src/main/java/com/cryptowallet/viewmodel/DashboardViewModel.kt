@@ -70,18 +70,6 @@ class DashboardViewModel() : ViewModel() {
         }
     }
 
-    private fun setupWebSocket(symbol: String, range: ChartRangeEnum) {
-        _binanceWS?.disconnect()
-        
-        if (range == ChartRangeEnum.REAL_TIME || range == ChartRangeEnum.TODAY) {
-            val interval = if (range == ChartRangeEnum.REAL_TIME) "1s" else "1m"
-            _binanceWS = BinanceWebSocketManager { newPoint ->
-                updateRealTimePoint(newPoint)
-            }
-            _binanceWS?.connect(symbol, interval)
-        }
-    }
-
     private fun updateRealTimePoint(newPoint: CoinGraphPoints) {
         _uiState.update { state ->
             val currentPoints = state.graphPoints.toMutableList()
@@ -137,6 +125,20 @@ class DashboardViewModel() : ViewModel() {
         }
     }
 
+    fun selectRange(range: ChartRangeEnum) {
+        if (range == _uiState.value.selectedRange) return
+        _uiState.update {
+            it.copy(
+                selectedRange = range,
+                graphPoints = emptyList(),
+                errorMessage = null
+            )
+        }
+        viewModelScope.launch {
+            loadGraphInternal(range)
+        }
+    }
+
     private suspend fun loadGraphInternal(range: ChartRangeEnum) {
         val symbol = _uiState.value.infoCoin?.dashboard?.coinDetails?.symbol?.uppercase() ?: return
         val points = _binanceRepository.getHistoricalKlines(symbol, range)
@@ -150,11 +152,15 @@ class DashboardViewModel() : ViewModel() {
         setupWebSocket(symbol, range)
     }
 
-    fun selectRange(range: ChartRangeEnum) {
-        if (range == _uiState.value.selectedRange) return
-        _uiState.update { it.copy(selectedRange = range, errorMessage = null) }
-        viewModelScope.launch {
-            loadGraphInternal(range)
+    private fun setupWebSocket(symbol: String, range: ChartRangeEnum) {
+        _binanceWS?.disconnect()
+
+        if (range == ChartRangeEnum.REAL_TIME || range == ChartRangeEnum.TODAY) {
+            val interval = if (range == ChartRangeEnum.REAL_TIME) "1s" else "1m"
+            _binanceWS = BinanceWebSocketManager { newPoint ->
+                updateRealTimePoint(newPoint)
+            }
+            _binanceWS?.connect(symbol, interval)
         }
     }
 
