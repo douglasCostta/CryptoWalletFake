@@ -2,12 +2,12 @@ package com.cryptowallet.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.cryptowallet.data.remote.enums.ChartRangeEnum
 import com.cryptowallet.data.remote.RetrofitInstance
 import com.cryptowallet.data.remote.service.CoinGeckoService
 import com.cryptowallet.data.repository.CoinGeckoRepository
-import com.cryptowallet.model.ChartRange
+import com.cryptowallet.model.CoinDetails
 import com.cryptowallet.model.GraphCoinDashboard
-import com.cryptowallet.model.CoinListItem
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -17,10 +17,10 @@ import kotlinx.coroutines.launch
 data class CoinUiState(
     val isLoadingCoins: Boolean = false,
     val isLoadingDashboard: Boolean = false,
-    val coins: List<CoinListItem> = emptyList(),
+    val coins: List<CoinDetails> = emptyList(),
     val selectedCoinId: String? = null,
     val dashboardPayload: GraphCoinDashboard? = null,
-    val selectedRange: ChartRange = ChartRange.ONE_DAY,
+    val selectedRange: ChartRangeEnum = ChartRangeEnum.TODAY,
     val errorMessage: String? = null,
 )
 
@@ -62,4 +62,3 @@ class TesteViewModel() : ViewModel() {
         }
     }
 }
-

@@ -9,6 +9,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.cryptowallet.ui.theme.CryptoWalletTheme
+import com.cryptowallet.view.DashboardScreen
 import com.cryptowallet.view.TesteScreen
 
 class MainActivity : ComponentActivity() {
@@ -17,7 +18,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             CryptoWalletTheme {
-                TesteScreen()
+                DashboardScreen()
             }
         }
     }
