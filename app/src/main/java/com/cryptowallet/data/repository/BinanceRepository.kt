@@ -12,11 +12,19 @@ class BinanceRepository(private val api: BinanceApi) {
 
     suspend fun getHistoricalKlines(
         coinSymbol: String,
-        range: ChartRangeEnum,
-        limit: Int = 100
+        range: ChartRangeEnum
     ): List<CoinGraphPoints> {
         val symbol = "${coinSymbol.uppercase()}USDT"
         val interval = mapRangeToInterval(range)
+        
+        val limit = when (range) {
+            ChartRangeEnum.REAL_TIME -> 100
+            ChartRangeEnum.TODAY -> 200
+            ChartRangeEnum.ONE_WEEK -> 168
+            ChartRangeEnum.ONE_MONTH -> 180
+            ChartRangeEnum.THREE_MONTHS -> 90
+            ChartRangeEnum.SIX_MONTHS -> 180
+        }
 
         return try {
             val response = api.getKlines(symbol, interval, limit)
