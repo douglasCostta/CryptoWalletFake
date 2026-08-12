@@ -34,7 +34,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
-import com.cryptowallet.model.CoinListItem
+import com.cryptowallet.model.CoinDetails
 import com.cryptowallet.viewmodel.TesteViewModel
 import java.text.NumberFormat
 import java.util.Locale
@@ -119,7 +119,7 @@ fun TesteScreen(viewModel: TesteViewModel = viewModel()) {
 }
 
 @Composable
-private fun CoinRow( coin: CoinListItem ) {
+private fun CoinRow( coin: CoinDetails ) {
 	val priceFormatter = NumberFormat.getCurrencyInstance(
 		Locale.Builder()
 			.setLanguage("en")
