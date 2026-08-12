@@ -10,7 +10,7 @@ import com.cryptowallet.model.WalletState
 
 class FakeWalletRepository(
     var walletBalanceProvider: suspend () -> WalletBalance = {
-        WalletBalance(totalReais = 20802.0, changePercentage24h = 4.23)
+        WalletBalance(totalReais = 20802.0, changeAmount24h = 845.06, changePercentage24h = 4.23)
     },
     var coinBalancesProvider: suspend () -> List<CoinBalance> = { emptyList() },
     var allCoinsProvider: suspend () -> List<CoinListItem> = { emptyList() },

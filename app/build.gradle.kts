@@ -68,6 +68,7 @@ dependencies {
     implementation("io.coil-kt:coil-compose:2.6.0")
     implementation("com.patrykandpatrick.vico:compose:2.0.0")
     implementation("com.patrykandpatrick.vico:core:2.0.0")
+    implementation("nl.dionsegijn:konfetti-compose:2.0.5")
     implementation(libs.androidx.datastore.preferences)
     implementation(libs.androidx.lifecycle.runtime.compose)
     implementation(libs.kotlinx.serialization.json)

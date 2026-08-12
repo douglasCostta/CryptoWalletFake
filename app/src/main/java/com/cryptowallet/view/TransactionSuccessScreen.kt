@@ -16,16 +16,23 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.cryptowallet.model.TransactionType
 import com.cryptowallet.ui.theme.WalletPositive
+import com.cryptowallet.ui.theme.WalletTextPrimary
 import com.cryptowallet.ui.theme.WalletTextSecondary
 import com.cryptowallet.view.components.GradientButton
 import com.cryptowallet.view.components.walletGlowBrush
 import java.util.Locale
+import java.util.concurrent.TimeUnit
+import nl.dionsegijn.konfetti.compose.KonfettiView
+import nl.dionsegijn.konfetti.core.Party
+import nl.dionsegijn.konfetti.core.Position
+import nl.dionsegijn.konfetti.core.emitter.Emitter
 
 @Composable
 fun TransactionSuccessScreen(
@@ -35,6 +42,19 @@ fun TransactionSuccessScreen(
     onBackToWallet: () -> Unit,
 ) {
     val verb = if (type == TransactionType.BUY) "bought" else "sold"
+    val confettiParties = remember {
+        listOf(
+            Party(
+                speed = 10f,
+                maxSpeed = 30f,
+                damping = 0.9f,
+                spread = 360,
+                colors = listOf(0xF2841B, 0xF7C948, 0x35C759, 0xFDFBF9),
+                position = Position.Relative(0.5, 0.3),
+                emitter = Emitter(duration = 150, TimeUnit.MILLISECONDS).max(150),
+            ),
+        )
+    }
 
     Box(
         modifier = Modifier
@@ -54,7 +74,12 @@ fun TransactionSuccessScreen(
                 modifier = Modifier.size(96.dp),
             )
             Spacer(modifier = Modifier.height(16.dp))
-            Text(text = "Transaction Completed", style = MaterialTheme.typography.headlineSmall, fontWeight = FontWeight.Bold)
+            Text(
+                text = "Transaction Completed",
+                style = MaterialTheme.typography.headlineSmall,
+                fontWeight = FontWeight.Bold,
+                color = WalletTextPrimary,
+            )
             Spacer(modifier = Modifier.height(8.dp))
             Text(
                 text = "You successfully $verb ${String.format(Locale.US, "%.6f", amount)} $coinSymbol",
@@ -69,5 +94,7 @@ fun TransactionSuccessScreen(
                 .fillMaxWidth()
                 .align(Alignment.BottomCenter),
         )
+
+        KonfettiView(modifier = Modifier.fillMaxSize(), parties = confettiParties)
     }
 }

@@ -69,7 +69,7 @@ class BuySellViewModel(
         loadBalanceJob?.cancel()
         loadBalanceJob = viewModelScope.launch {
             runCatching { repository.getWalletState() }
-                .onSuccess { state -> _uiState.update { it.copy(balanceBefore = state) } }
+                .onSuccess { state -> _uiState.update { it.copy(balanceBefore = state, balanceAfter = state) } }
                 .onFailure { throwable ->
                     _uiState.update { it.copy(errorMessage = throwable.message ?: "Erro ao carregar saldo.") }
                 }

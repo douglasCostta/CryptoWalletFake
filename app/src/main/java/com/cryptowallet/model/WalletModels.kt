@@ -24,6 +24,7 @@ data class CoinBalance(
 
 data class WalletBalance(
     val totalReais: Double,
+    val changeAmount24h: Double,
     val changePercentage24h: Double,
 )
 
@@ -52,11 +53,16 @@ fun WalletState.toWalletBalance(coinBalances: List<CoinBalance>): WalletBalance 
         val previousPrice = balance.coin.currentPrice - balance.coin.priceChange24h
         balance.amountOwned * previousPrice
     }
+    val changeAmount = totalReais - totalPrevious
     val changePercentage = if (totalPrevious == 0.0) {
         0.0
     } else {
-        ((totalReais - totalPrevious) / totalPrevious) * 100.0
+        (changeAmount / totalPrevious) * 100.0
     }
 
-    return WalletBalance(totalReais = totalReais, changePercentage24h = changePercentage)
+    return WalletBalance(
+        totalReais = totalReais,
+        changeAmount24h = changeAmount,
+        changePercentage24h = changePercentage,
+    )
 }

@@ -53,7 +53,7 @@ fun GradientButton(
     Box(
         modifier = modifier
             .height(52.dp)
-            .clip(RoundedCornerShape(26.dp))
+            .clip(RoundedCornerShape(8.dp))
             .background(if (enabled) OrangeGradient else Brush.horizontalGradient(listOf(WalletCardBorder, WalletCardBorder)))
             .clickable(enabled = enabled, onClick = onClick),
         contentAlignment = Alignment.Center,
@@ -72,7 +72,7 @@ fun <T> SegmentedTabs(
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .clip(RoundedCornerShape(24.dp))
+            .clip(RoundedCornerShape(8.dp))
             .background(MaterialTheme.colorScheme.surface)
             .padding(4.dp),
     ) {

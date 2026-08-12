@@ -40,6 +40,7 @@ import com.cryptowallet.model.CoinListItem
 import com.cryptowallet.ui.theme.WalletCardBorder
 import com.cryptowallet.ui.theme.WalletNegative
 import com.cryptowallet.ui.theme.WalletPositive
+import com.cryptowallet.ui.theme.WalletTextPrimary
 import com.cryptowallet.ui.theme.WalletTextSecondary
 import com.cryptowallet.view.components.GradientButton
 import com.cryptowallet.view.components.SegmentedTabs
@@ -49,6 +50,7 @@ import com.cryptowallet.viewmodel.WalletUiState
 import com.cryptowallet.viewmodel.WalletViewModel
 import java.text.NumberFormat
 import java.util.Locale
+import kotlin.math.abs
 
 private val ReaisFormatter: NumberFormat = NumberFormat.getCurrencyInstance(Locale("pt", "BR"))
 
@@ -89,13 +91,23 @@ private fun WalletContent(
             return
         }
 
-        Column(modifier = Modifier.fillMaxSize().padding(16.dp)) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(start = 16.dp, end = 16.dp, bottom = 16.dp, top = 34.dp),
+        ) {
             Box(modifier = Modifier.fillMaxWidth()) {
-                Icon(imageVector = Icons.Filled.Menu, contentDescription = "Menu", modifier = Modifier.align(Alignment.CenterStart))
+                Icon(
+                    imageVector = Icons.Filled.Menu,
+                    contentDescription = "Menu",
+                    tint = WalletTextPrimary,
+                    modifier = Modifier.align(Alignment.CenterStart),
+                )
                 Text(
                     text = "Wallet",
-                    style = MaterialTheme.typography.titleMedium,
+                    style = MaterialTheme.typography.titleLarge,
                     fontWeight = FontWeight.Bold,
+                    color = WalletTextPrimary,
                     modifier = Modifier.align(Alignment.Center),
                 )
             }
@@ -121,18 +133,30 @@ private fun WalletContent(
                 shape = RoundedCornerShape(20.dp),
                 colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
             ) {
-                Column(modifier = Modifier.padding(20.dp)) {
+                Column(
+                    modifier = Modifier.padding(20.dp).fillMaxWidth(),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                ) {
                     uiState.balance?.let { balance ->
                         Text(
                             text = ReaisFormatter.format(balance.totalReais),
                             style = MaterialTheme.typography.displaySmall,
                             fontWeight = FontWeight.Bold,
                         )
-                        Spacer(modifier = Modifier.height(4.dp))
-                        val changeColor = if (balance.changePercentage24h < 0) WalletNegative else WalletPositive
+                        Spacer(modifier = Modifier.height(8.dp))
+                        val isPositive = balance.changePercentage24h >= 0
+                        val changeColor = if (isPositive) WalletPositive else WalletNegative
+                        val amountSign = if (balance.changeAmount24h >= 0) "+" else "-"
                         Text(
-                            text = String.format(Locale.US, "%+.2f%% Last 24 hours", balance.changePercentage24h),
+                            text = "$amountSign${ReaisFormatter.format(abs(balance.changeAmount24h))} " +
+                                "(${String.format(Locale.US, "%+.2f%%", balance.changePercentage24h)})",
                             color = changeColor,
+                            fontWeight = FontWeight.SemiBold,
+                        )
+                        Spacer(modifier = Modifier.height(2.dp))
+                        Text(
+                            text = "Last 24 hours",
+                            color = WalletTextSecondary,
                             style = MaterialTheme.typography.bodySmall,
                         )
                     }
