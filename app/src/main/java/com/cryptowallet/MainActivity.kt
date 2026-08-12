@@ -4,15 +4,12 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import com.cryptowallet.data.local.WalletLocalDataSource
-import com.cryptowallet.data.local.walletDataStore
-import com.cryptowallet.data.remote.RetrofitInstance
-import com.cryptowallet.data.remote.service.CoinGeckoService
-import com.cryptowallet.data.repository.CoinGeckoRepository
-import com.cryptowallet.data.repository.WalletRepository
-import com.cryptowallet.data.repository.WalletRepositoryImpl
-import com.cryptowallet.navigation.CryptoWalletNavHost
-import com.cryptowallet.ui.theme.WalletTheme
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
+import com.cryptowallet.navigation.AppNavigation
+import com.cryptowallet.ui.theme.CryptoWalletTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -25,8 +22,8 @@ class MainActivity : ComponentActivity() {
         )
 
         setContent {
-            WalletTheme {
-                CryptoWalletNavHost(walletRepository = walletRepository)
+            CryptoWalletTheme {
+                AppNavigation()
             }
         }
     }
