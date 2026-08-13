@@ -2,6 +2,7 @@ package com.cryptowallet.data.remote.api
 
 import com.cryptowallet.data.remote.constants.CurrencyConstants
 import com.cryptowallet.data.remote.dto.CoinGeckoCoin
+import com.cryptowallet.data.remote.dto.CoinMarketChartResponse
 import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
@@ -25,4 +26,11 @@ interface CoinGeckoApi {
         @Query("vs_currency") vsCurrency: String = CurrencyConstants.DEFAULT_VS_CURRENCY,
         @Query("days") days: String = "1"
     ): List<List<Double>>
+
+    @GET("{id}/market_chart")
+    suspend fun getCoinMarketChart(
+        @Path("id") id: String,
+        @Query("vs_currency") vsCurrency: String = CurrencyConstants.DEFAULT_VS_CURRENCY,
+        @Query("days") days: String = "1",
+    ): CoinMarketChartResponse
 }

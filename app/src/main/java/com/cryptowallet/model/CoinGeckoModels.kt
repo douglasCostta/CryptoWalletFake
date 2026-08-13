@@ -2,10 +2,7 @@ package com.cryptowallet.model
 
 import java.io.Serializable
 
-/**
- * Item usado na listagem principal de moedas
- */
-data class CoinListItem(
+data class CoinDetails (
     val id: String,
     val symbol: String,
     val name: String,
@@ -17,7 +14,7 @@ data class CoinListItem(
 ) : Serializable
 
 data class CoinDashboard(
-    val coin: CoinListItem,
+    val coinDetails: CoinDetails,
     val marketData: CoinMarketData,
     val supplyData: CoinSupplyData,
     val performanceData: CoinPerformanceData,
@@ -46,29 +43,5 @@ data class CoinPerformanceData(
     val atlDate: String,
 ) : Serializable
 
-enum class ChartRange(
-    val label: String,
-    val apiDays: String,
-) {
-    REAL_TIME("Tempo Real", "1"),
-    ONE_DAY("1D", "1"),
-    ONE_WEEK("1W", "7"),
-    ONE_MONTH("1M", "30"),
-    THREE_MONTHS("3M", "90"),
-    SIX_MONTHS("6M", "180"),
-}
-
-data class CoinChartPoint(
-    val timestamp: Long,
-    val open: Double,
-    val high: Double,
-    val low: Double,
-    val close: Double,
-) : Serializable
-
-data class GraphCoinDashboard(
-    val dashboard: CoinDashboard,
-    val selectedRange: ChartRange,
-    val chartPoints: List<CoinChartPoint>,
-) : Serializable
+data class GraphCoinDashboard(val dashboard: CoinDashboard) : Serializable
 
