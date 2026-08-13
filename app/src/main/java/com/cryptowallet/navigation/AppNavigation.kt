@@ -6,11 +6,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.cryptowallet.view.AuthScreen
-<<<<<<< HEAD
-import com.cryptowallet.view.TesteScreen
-=======
 import com.cryptowallet.view.DashboardScreen
->>>>>>> origin/main
 import com.google.firebase.auth.FirebaseAuth
 
 object Routes {
@@ -36,18 +32,7 @@ fun AppNavigation() {
             )
         }
         composable(Routes.DASHBOARD) {
-<<<<<<< HEAD
-            TesteScreen(
-                onLogout = {
-                    FirebaseAuth.getInstance().signOut()
-                    navController.navigate(Routes.LOGIN) {
-                        popUpTo(Routes.DASHBOARD) { inclusive = true }
-                    }
-                },
-            )
-=======
             DashboardScreen()
->>>>>>> origin/main
         }
     }
 }

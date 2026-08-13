@@ -16,11 +16,6 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
 
-        val walletRepository: WalletRepository = WalletRepositoryImpl(
-            coinGeckoRepository = CoinGeckoRepository(CoinGeckoService(RetrofitInstance.api)),
-            localDataSource = WalletLocalDataSource(applicationContext.walletDataStore),
-        )
-
         setContent {
             CryptoWalletTheme {
                 AppNavigation()

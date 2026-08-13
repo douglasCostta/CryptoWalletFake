@@ -1,9 +1,6 @@
 package com.cryptowallet.data.repository
 
-<<<<<<< HEAD
-=======
 import android.util.Log
->>>>>>> origin/main
 import com.cryptowallet.data.remote.constants.CurrencyConstants
 import com.cryptowallet.data.remote.service.CoinGeckoService
 import com.cryptowallet.data.remote.enums.ChartRangeEnum
@@ -17,25 +14,16 @@ import com.cryptowallet.model.toCoinListItem
 
 class CoinGeckoRepository(private val service: CoinGeckoService) {
 
-<<<<<<< HEAD
-    suspend fun getCoins(vsCurrency: String = CurrencyConstants.DEFAULT_VS_CURRENCY): List<CoinListItem> {
+    suspend fun getCoins(vsCurrency: String = CurrencyConstants.DEFAULT_VS_CURRENCY): List<CoinDetails> {
         return service.getAllCoins(vsCurrency = vsCurrency).map { it.toCoinListItem() }
     }
 
     suspend fun getCoinsByIds(
         ids: List<String>,
         vsCurrency: String = CurrencyConstants.DEFAULT_VS_CURRENCY,
-    ): List<CoinListItem> {
+    ): List<CoinDetails> {
         if (ids.isEmpty()) return emptyList()
         return service.getCoinById(vsCurrency = vsCurrency, ids = ids.joinToString(",")).map { it.toCoinListItem() }
-=======
-    suspend fun getCoins(vsCurrency: String = CurrencyConstants.DEFAULT_VS_CURRENCY): List<CoinDetails> {
-        val coins = service.getAllCoins(vsCurrency = vsCurrency)
-        return coins.map {
-            val item = it.toCoinListItem()
-            item
-        }
->>>>>>> origin/main
     }
 
     suspend fun getCoinDashboard(coinId: String, vsCurrency: String = CurrencyConstants.DEFAULT_VS_CURRENCY): CoinDashboard {
@@ -102,4 +90,3 @@ class CoinGeckoRepository(private val service: CoinGeckoService) {
         }
     }
 }
-
