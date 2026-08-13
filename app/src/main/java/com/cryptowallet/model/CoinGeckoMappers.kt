@@ -2,8 +2,8 @@ package com.cryptowallet.model
 
 import com.cryptowallet.data.remote.dto.CoinGeckoCoin
 
-fun CoinGeckoCoin.toCoinListItem(): CoinListItem {
-    return CoinListItem(
+fun CoinGeckoCoin.toCoinListItem(): CoinDetails {
+    return CoinDetails(
         id = id.orEmpty(),
         symbol = symbol.orEmpty(),
         name = name.orEmpty(),
@@ -17,7 +17,7 @@ fun CoinGeckoCoin.toCoinListItem(): CoinListItem {
 
 fun CoinGeckoCoin.toCoinDashboard(): CoinDashboard {
     return CoinDashboard(
-        coin = toCoinListItem(),
+        coinDetails = toCoinListItem(),
         marketData = CoinMarketData(
             marketCap = marketCap ?: 0.0,
             totalVolume24h = totalVolume ?: 0.0,
@@ -41,10 +41,10 @@ fun CoinGeckoCoin.toCoinDashboard(): CoinDashboard {
     )
 }
 
-fun List<Double>.toCoinChartPointOrNull(): CoinChartPoint? {
+fun List<Double>.toCoinChartPointOrNull(): CoinGraphPoints? {
     if (size < 5) return null
 
-    return CoinChartPoint(
+    return CoinGraphPoints(
         timestamp = get(0).toLong(),
         open = get(1),
         high = get(2),
