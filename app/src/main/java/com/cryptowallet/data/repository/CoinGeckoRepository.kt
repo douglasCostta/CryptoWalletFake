@@ -15,11 +15,15 @@ import com.cryptowallet.model.toCoinListItem
 class CoinGeckoRepository(private val service: CoinGeckoService) {
 
     suspend fun getCoins(vsCurrency: String = CurrencyConstants.DEFAULT_VS_CURRENCY): List<CoinDetails> {
-        val coins = service.getAllCoins(vsCurrency = vsCurrency)
-        return coins.map {
-            val item = it.toCoinListItem()
-            item
-        }
+        return service.getAllCoins(vsCurrency = vsCurrency).map { it.toCoinListItem() }
+    }
+
+    suspend fun getCoinsByIds(
+        ids: List<String>,
+        vsCurrency: String = CurrencyConstants.DEFAULT_VS_CURRENCY,
+    ): List<CoinDetails> {
+        if (ids.isEmpty()) return emptyList()
+        return service.getCoinById(vsCurrency = vsCurrency, ids = ids.joinToString(",")).map { it.toCoinListItem() }
     }
 
     suspend fun getCoinDashboard(coinId: String, vsCurrency: String = CurrencyConstants.DEFAULT_VS_CURRENCY): CoinDashboard {
@@ -86,4 +90,3 @@ class CoinGeckoRepository(private val service: CoinGeckoService) {
         }
     }
 }
-
