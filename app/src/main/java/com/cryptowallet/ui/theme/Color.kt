@@ -10,6 +10,10 @@ val Purple40 = Color(0xFF6650a4)
 val PurpleGrey40 = Color(0xFF625b71)
 val Pink40 = Color(0xFF7D5260)
 
+// Wallet brand palette - dark, warm background with an orange/amber accent.
+val WalletTextPrimary = Color(0xFFFDFBF9)
+val WalletPositive = Color(0xFF35C759)
+val WalletNegative = Color(0xFFFF6B6B)
 val CryptoOrange = Color(0xFFF7931A)
 
 // Auth screen background gradient (sampled from the design reference)
@@ -19,3 +23,6 @@ val AuthBackgroundGlow = Color(0xFF2A2420)
 val AuthBackgroundBottom = Color(0xFF1E1E1E)
 val AuthFieldBorder = Color(0xFF5A5355)
 val AuthLabelMuted = Color(0xFFB8B3AE)
+
+// Solid warm-brown fill for select/pill controls (coin dropdown), matching the design reference.
+val WalletSelectBackground = Color(0xFF4E3220)

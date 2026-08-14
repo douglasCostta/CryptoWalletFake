@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.compose)
+    alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.google.services)
 }
 
@@ -69,6 +70,11 @@ dependencies {
     implementation("io.coil-kt:coil-compose:2.6.0")
     implementation("com.patrykandpatrick.vico:compose:2.0.0")
     implementation("com.patrykandpatrick.vico:core:2.0.0")
+    implementation("nl.dionsegijn:konfetti-compose:2.0.5")
+    implementation(libs.androidx.datastore.preferences)
+    implementation(libs.androidx.lifecycle.runtime.compose)
+    implementation(libs.kotlinx.serialization.json)
+    testImplementation(libs.kotlinx.coroutines.test)
 
     // Firebase (Auth + Firestore) para autenticação e persistência real do usuário
     implementation(platform("com.google.firebase:firebase-bom:33.7.0"))
