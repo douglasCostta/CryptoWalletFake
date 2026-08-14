@@ -2,7 +2,7 @@ package com.cryptowallet.viewmodel
 
 import com.cryptowallet.MainDispatcherRule
 import com.cryptowallet.fakes.FakeWalletRepository
-import com.cryptowallet.model.CoinListItem
+import com.cryptowallet.model.CoinDetails
 import com.cryptowallet.model.TransactionResult
 import com.cryptowallet.model.TransactionType
 import com.cryptowallet.model.WalletHolding
@@ -21,7 +21,7 @@ class BuySellViewModelTest {
     @get:Rule
     val mainDispatcherRule = MainDispatcherRule()
 
-    private fun ethCoin() = CoinListItem(
+    private fun ethCoin() = CoinDetails(
         id = "ethereum", symbol = "eth", name = "Ethereum", imageUrl = "",
         currentPrice = 2000.0, priceChange24h = -20.0, priceChangePercentage24h = -1.0, marketCapRank = 2,
     )

@@ -14,34 +14,16 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.RadialGradientShader
-import androidx.compose.ui.graphics.Shader
-import androidx.compose.ui.graphics.ShaderBrush
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.cryptowallet.ui.theme.WalletBackground
-import com.cryptowallet.ui.theme.WalletCardBorder
-import com.cryptowallet.ui.theme.WalletGlow
-import com.cryptowallet.ui.theme.WalletOrangeEnd
-import com.cryptowallet.ui.theme.WalletOrangeStart
+import com.cryptowallet.ui.theme.AuthFieldBorder
+import com.cryptowallet.ui.theme.AuthLabelMuted
+import com.cryptowallet.ui.theme.CryptoOrange
 import com.cryptowallet.ui.theme.WalletTextPrimary
-import com.cryptowallet.ui.theme.WalletTextSecondary
 
-private val OrangeGradient = Brush.horizontalGradient(listOf(WalletOrangeStart, WalletOrangeEnd))
-
-/** Warm radial glow over the dark background, matching the mockup's top-right spotlight. */
-fun walletGlowBrush(): Brush = object : ShaderBrush() {
-    override fun createShader(size: androidx.compose.ui.geometry.Size): Shader {
-        return RadialGradientShader(
-            center = Offset(size.width * 0.85f, size.height * 0.05f),
-            radius = size.width.coerceAtLeast(1f) * 1.1f,
-            colors = listOf(WalletGlow, WalletBackground),
-        )
-    }
-}
+private val OrangeGradient = Brush.horizontalGradient(listOf(CryptoOrange, CryptoOrange))
 
 @Composable
 fun GradientButton(
@@ -54,7 +36,7 @@ fun GradientButton(
         modifier = modifier
             .height(52.dp)
             .clip(RoundedCornerShape(8.dp))
-            .background(if (enabled) OrangeGradient else Brush.horizontalGradient(listOf(WalletCardBorder, WalletCardBorder)))
+            .background(if (enabled) OrangeGradient else Brush.horizontalGradient(listOf(AuthFieldBorder, AuthFieldBorder)))
             .clickable(enabled = enabled, onClick = onClick),
         contentAlignment = Alignment.Center,
     ) {
@@ -89,7 +71,7 @@ fun <T> SegmentedTabs(
             ) {
                 Text(
                     text = label,
-                    color = if (isSelected) WalletTextPrimary else WalletTextSecondary,
+                    color = if (isSelected) WalletTextPrimary else AuthLabelMuted,
                     fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal,
                 )
             }

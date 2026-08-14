@@ -2,7 +2,7 @@ package com.cryptowallet.fakes
 
 import com.cryptowallet.data.repository.WalletRepository
 import com.cryptowallet.model.CoinBalance
-import com.cryptowallet.model.CoinListItem
+import com.cryptowallet.model.CoinDetails
 import com.cryptowallet.model.TransactionRequest
 import com.cryptowallet.model.TransactionResult
 import com.cryptowallet.model.WalletBalance
@@ -13,8 +13,8 @@ class FakeWalletRepository(
         WalletBalance(totalReais = 20802.0, changeAmount24h = 845.06, changePercentage24h = 4.23)
     },
     var coinBalancesProvider: suspend () -> List<CoinBalance> = { emptyList() },
-    var allCoinsProvider: suspend () -> List<CoinListItem> = { emptyList() },
-    var tradableCoinsProvider: suspend () -> List<CoinListItem> = { emptyList() },
+    var allCoinsProvider: suspend () -> List<CoinDetails> = { emptyList() },
+    var tradableCoinsProvider: suspend () -> List<CoinDetails> = { emptyList() },
     var walletStateProvider: suspend () -> WalletState = {
         WalletState(cashBalanceReais = 1074.32, holdings = emptyList())
     },
@@ -27,8 +27,8 @@ class FakeWalletRepository(
 
     override suspend fun getWalletBalance(): WalletBalance = walletBalanceProvider()
     override suspend fun getCoinBalances(): List<CoinBalance> = coinBalancesProvider()
-    override suspend fun getAllCoins(): List<CoinListItem> = allCoinsProvider()
-    override suspend fun getTradableCoins(): List<CoinListItem> = tradableCoinsProvider()
+    override suspend fun getAllCoins(): List<CoinDetails> = allCoinsProvider()
+    override suspend fun getTradableCoins(): List<CoinDetails> = tradableCoinsProvider()
     override suspend fun getWalletState(): WalletState = walletStateProvider()
 
     override suspend fun getCoinPrice(coinId: String): Double =

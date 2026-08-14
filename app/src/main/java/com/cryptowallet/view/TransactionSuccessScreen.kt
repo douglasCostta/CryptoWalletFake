@@ -1,6 +1,5 @@
 package com.cryptowallet.view
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -22,11 +21,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.cryptowallet.model.TransactionType
+import com.cryptowallet.ui.theme.AuthLabelMuted
 import com.cryptowallet.ui.theme.WalletPositive
 import com.cryptowallet.ui.theme.WalletTextPrimary
-import com.cryptowallet.ui.theme.WalletTextSecondary
+import com.cryptowallet.view.component.AppBackground1
 import com.cryptowallet.view.components.GradientButton
-import com.cryptowallet.view.components.walletGlowBrush
 import java.util.Locale
 import java.util.concurrent.TimeUnit
 import nl.dionsegijn.konfetti.compose.KonfettiView
@@ -56,45 +55,46 @@ fun TransactionSuccessScreen(
         )
     }
 
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(walletGlowBrush())
-            .padding(24.dp),
-    ) {
-        Column(
-            modifier = Modifier.fillMaxSize(),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center,
-        ) {
-            Icon(
-                imageVector = Icons.Filled.CheckCircle,
-                contentDescription = null,
-                tint = WalletPositive,
-                modifier = Modifier.size(96.dp),
-            )
-            Spacer(modifier = Modifier.height(16.dp))
-            Text(
-                text = "Transaction Completed",
-                style = MaterialTheme.typography.headlineSmall,
-                fontWeight = FontWeight.Bold,
-                color = WalletTextPrimary,
-            )
-            Spacer(modifier = Modifier.height(8.dp))
-            Text(
-                text = "You successfully $verb ${String.format(Locale.US, "%.6f", amount)} $coinSymbol",
-                color = WalletTextSecondary,
-            )
-        }
-
-        GradientButton(
-            text = "Back to Wallet",
-            onClick = onBackToWallet,
+    AppBackground1 {
+        Box(
             modifier = Modifier
-                .fillMaxWidth()
-                .align(Alignment.BottomCenter),
-        )
+                .fillMaxSize()
+                .padding(24.dp),
+        ) {
+            Column(
+                modifier = Modifier.fillMaxSize(),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center,
+            ) {
+                Icon(
+                    imageVector = Icons.Filled.CheckCircle,
+                    contentDescription = null,
+                    tint = WalletPositive,
+                    modifier = Modifier.size(96.dp),
+                )
+                Spacer(modifier = Modifier.height(16.dp))
+                Text(
+                    text = "Transaction Completed",
+                    style = MaterialTheme.typography.headlineSmall,
+                    fontWeight = FontWeight.Bold,
+                    color = WalletTextPrimary,
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+                Text(
+                    text = "You successfully $verb ${String.format(Locale.US, "%.6f", amount)} $coinSymbol",
+                    color = AuthLabelMuted,
+                )
+            }
 
-        KonfettiView(modifier = Modifier.fillMaxSize(), parties = confettiParties)
+            GradientButton(
+                text = "Back to Wallet",
+                onClick = onBackToWallet,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .align(Alignment.BottomCenter),
+            )
+
+            KonfettiView(modifier = Modifier.fillMaxSize(), parties = confettiParties)
+        }
     }
 }

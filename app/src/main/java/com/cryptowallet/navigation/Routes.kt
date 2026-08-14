@@ -9,7 +9,7 @@ sealed class Routes {
     data object Wallet : Routes()
 
     @Serializable
-    data class Trade(val type: TransactionType) : Routes()
+    data class Trade(val type: TransactionType, val preselectedCoinId: String? = null) : Routes()
 
     @Serializable
     data class TransactionSuccess(
@@ -17,4 +17,7 @@ sealed class Routes {
         val coinSymbol: String,
         val amount: Double,
     ) : Routes()
+
+    @Serializable
+    data class Dashboard(val coinId: String) : Routes()
 }

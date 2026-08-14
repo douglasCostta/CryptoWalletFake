@@ -2,6 +2,7 @@ package com.cryptowallet.fakes
 
 import com.cryptowallet.data.remote.api.CoinGeckoApi
 import com.cryptowallet.data.remote.dto.CoinGeckoCoin
+import com.cryptowallet.data.remote.dto.CoinMarketChartResponse
 
 class FakeCoinGeckoApi(
     private val coins: List<CoinGeckoCoin> = defaultCoins(),
@@ -24,6 +25,10 @@ class FakeCoinGeckoApi(
 
     override suspend fun getCoinOhlcGraph(id: String, vsCurrency: String, days: String): List<List<Double>> {
         return emptyList()
+    }
+
+    override suspend fun getCoinMarketChart(id: String, vsCurrency: String, days: String): CoinMarketChartResponse {
+        return CoinMarketChartResponse(prices = emptyList())
     }
 
     companion object {
