@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
@@ -29,7 +30,8 @@ fun AppBackground1(content: @Composable BoxScope.() -> Unit) {
 	Box(
 		modifier = Modifier
 			.background(brush = AppGradientBrush1)
-			.padding(12.dp)
+			.safeDrawingPadding()
+			.padding(20.dp)
 			.fillMaxSize(),
 	) { content() }
 }

@@ -230,7 +230,7 @@ fun DashboardScreen(
                 AppButton(
                     text = "Buy ${uiState.symbol}",
                     modifier = Modifier.fillMaxWidth(),
-                    action = onBuyClick,
+                    onClick = onBuyClick,
                 )
 
             }
