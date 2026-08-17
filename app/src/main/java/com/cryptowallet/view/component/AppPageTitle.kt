@@ -16,7 +16,7 @@ import com.cryptowallet.ui.theme.WalletTextPrimary
 fun AppPageTitle(text: String) {
 	Text(
 		text = text,
-		style = MaterialTheme.typography.titleLarge,
+		style = MaterialTheme.typography.headlineMedium,
 		fontWeight = FontWeight.Bold,
 		color = WalletTextPrimary,
 		textAlign = TextAlign.Center,

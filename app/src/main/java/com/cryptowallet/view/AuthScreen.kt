@@ -1,9 +1,7 @@
 package com.cryptowallet.view
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -11,16 +9,13 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -41,6 +36,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.cryptowallet.ui.theme.AuthBackgroundBottom
@@ -50,18 +46,12 @@ import com.cryptowallet.ui.theme.AuthBackgroundTop
 import com.cryptowallet.ui.theme.AuthFieldBorder
 import com.cryptowallet.ui.theme.AuthLabelMuted
 import com.cryptowallet.ui.theme.CryptoOrange
+import com.cryptowallet.view.component.AppBackground2
+import com.cryptowallet.view.component.AppButton
+import com.cryptowallet.view.component.AppPageTitle
 import com.cryptowallet.viewmodel.AuthMode
+import com.cryptowallet.viewmodel.AuthUiState
 import com.cryptowallet.viewmodel.AuthViewModel
-
-private val AuthBackgroundBrush = Brush.verticalGradient(
-    colorStops = arrayOf(
-        0.00f to AuthBackgroundTop,
-        0.30f to AuthBackgroundMid,
-        0.55f to AuthBackgroundMid,
-        0.80f to AuthBackgroundGlow,
-        1.00f to AuthBackgroundBottom,
-    ),
-)
 
 private val AuthTextFieldColors
     @Composable get() = OutlinedTextFieldDefaults.colors(
@@ -93,25 +83,17 @@ fun AuthScreen(
     var confirmPasswordVisible by remember { mutableStateOf(false) }
     val isRegister = uiState.mode == AuthMode.REGISTER
 
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(AuthBackgroundBrush),
-    ) {
+    AppBackground2 {
         Column(
             modifier = Modifier
+                .safeDrawingPadding()
                 .fillMaxSize()
                 .verticalScroll(rememberScrollState())
-                .padding(24.dp),
+                .padding(start = 20.dp, end = 20.dp, bottom = 20.dp, top = 40.dp),
             verticalArrangement = Arrangement.Center,
         ) {
-            Text(
-                text = if (isRegister) "Create account" else "Sign in",
-                style = MaterialTheme.typography.headlineMedium,
-                fontWeight = FontWeight.Bold,
-                color = Color.White,
-            )
-            Spacer(modifier = Modifier.height(24.dp))
+            AppPageTitle(if (isRegister) "Create account" else "Sign in")
+            Spacer(modifier = Modifier.height(40.dp))
 
             if (isRegister) {
                 OutlinedTextField(
@@ -194,26 +176,15 @@ fun AuthScreen(
                 )
             }
 
-            Spacer(modifier = Modifier.height(24.dp))
+            Spacer(modifier = Modifier.height(40.dp))
 
-            Button(
+            AppButton(
+                text = if (isRegister) "Sign up" else "Sign in",
                 onClick = viewModel::submit,
                 enabled = !uiState.isLoading,
-                colors = ButtonDefaults.buttonColors(containerColor = CryptoOrange, contentColor = Color.White),
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(50.dp),
-            ) {
-                if (uiState.isLoading) {
-                    CircularProgressIndicator(
-                        modifier = Modifier.size(20.dp),
-                        color = Color.White,
-                        strokeWidth = 2.dp,
-                    )
-                } else {
-                    Text(text = if (isRegister) "Sign up" else "Sign in")
-                }
-            }
+                modifier = Modifier.fillMaxWidth(),
+                isLoading = uiState.isLoading
+            )
 
             Spacer(modifier = Modifier.height(16.dp))
 

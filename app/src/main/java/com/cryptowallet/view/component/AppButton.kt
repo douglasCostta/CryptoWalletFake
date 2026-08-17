@@ -6,8 +6,10 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -30,6 +32,7 @@ fun AppButton(
 	text: String,
 	modifier: Modifier = Modifier,
 	enabled: Boolean = true,
+	isLoading: Boolean = false,
 	onClick: () -> Unit
 ) {
 	Button(
@@ -49,7 +52,15 @@ fun AppButton(
 				.fillMaxWidth(),
 			contentAlignment = Alignment.Center
 		) {
-			Text(text, fontSize = 18.sp, color = WalletTextPrimary, fontWeight = FontWeight.Bold)
+			if (isLoading) {
+				CircularProgressIndicator(
+					modifier = Modifier.size(20.dp),
+					color = Color.White,
+					strokeWidth = 2.dp,
+				)
+			} else {
+				Text(text, fontSize = 18.sp, color = WalletTextPrimary, fontWeight = FontWeight.Bold)
+			}
 		}
 	}
 }
