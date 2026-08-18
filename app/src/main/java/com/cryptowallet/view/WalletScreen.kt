@@ -12,21 +12,19 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -36,20 +34,24 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
 import com.cryptowallet.model.CoinBalance
 import com.cryptowallet.model.CoinDetails
+import com.cryptowallet.model.WalletBalance
 import com.cryptowallet.ui.theme.AuthFieldBorder
 import com.cryptowallet.ui.theme.AuthLabelMuted
 import com.cryptowallet.ui.theme.CryptoOrange
 import com.cryptowallet.ui.theme.WalletNegative
 import com.cryptowallet.ui.theme.WalletPositive
 import com.cryptowallet.ui.theme.WalletTextPrimary
-import com.cryptowallet.view.component.AppBackground1
-import com.cryptowallet.view.components.GradientButton
-import com.cryptowallet.view.components.SegmentedTabs
+import com.cryptowallet.view.component.AppBackground2
+import com.cryptowallet.view.component.AppButton
+import com.cryptowallet.view.component.AppCard
+import com.cryptowallet.view.component.AppPageTitle
+import com.cryptowallet.view.component.SegmentedTabs
 import com.cryptowallet.viewmodel.WalletTab
 import com.cryptowallet.viewmodel.WalletUiState
 import com.cryptowallet.viewmodel.WalletViewModel
@@ -65,7 +67,6 @@ fun WalletScreen(
     onBuyClick: () -> Unit,
     onSellClick: () -> Unit,
     onCoinClick: (String) -> Unit = {},
-    onLogout: () -> Unit = {},
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
@@ -76,7 +77,6 @@ fun WalletScreen(
         onSellClick = onSellClick,
         onCoinClick = onCoinClick,
         onRetryClick = viewModel::refresh,
-        onLogout = onLogout,
     )
 }
 
@@ -88,32 +88,16 @@ private fun WalletContent(
     onSellClick: () -> Unit,
     onCoinClick: (String) -> Unit,
     onRetryClick: () -> Unit,
-    onLogout: () -> Unit,
 ) {
-    AppBackground1 {
+    AppBackground2 {
         Column(
             modifier = Modifier
+                .safeDrawingPadding()
                 .fillMaxSize()
-                .padding(start = 16.dp, end = 16.dp, bottom = 16.dp, top = 34.dp),
+                .padding(start = 20.dp, end = 20.dp, bottom = 20.dp, top = 40.dp),
         ) {
-            Box(modifier = Modifier.fillMaxWidth()) {
-                Icon(
-                    imageVector = Icons.Filled.Menu,
-                    contentDescription = "Sair",
-                    tint = WalletTextPrimary,
-                    modifier = Modifier
-                        .align(Alignment.CenterStart)
-                        .clickable(onClick = onLogout),
-                )
-                Text(
-                    text = "Wallet",
-                    style = MaterialTheme.typography.titleLarge,
-                    fontWeight = FontWeight.Bold,
-                    color = WalletTextPrimary,
-                    modifier = Modifier.align(Alignment.Center),
-                )
-            }
-            Spacer(modifier = Modifier.height(20.dp))
+            AppPageTitle("Wallet")
+            Spacer(modifier = Modifier.height(30.dp))
 
             if (uiState.isLoading && uiState.balance == null) {
                 Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
@@ -135,13 +119,7 @@ private fun WalletContent(
                 Spacer(modifier = Modifier.height(8.dp))
             }
 
-            Card(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .border(1.dp, AuthFieldBorder, RoundedCornerShape(20.dp)),
-                shape = RoundedCornerShape(20.dp),
-                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
-            ) {
+            AppCard {
                 Column(
                     modifier = Modifier.padding(20.dp).fillMaxWidth(),
                     horizontalAlignment = Alignment.CenterHorizontally,
@@ -151,6 +129,7 @@ private fun WalletContent(
                             text = ReaisFormatter.format(balance.totalReais),
                             style = MaterialTheme.typography.displaySmall,
                             fontWeight = FontWeight.Bold,
+                            color = WalletTextPrimary
                         )
                         Spacer(modifier = Modifier.height(8.dp))
                         val isPositive = balance.changePercentage24h >= 0
@@ -175,11 +154,11 @@ private fun WalletContent(
             Spacer(modifier = Modifier.height(16.dp))
 
             Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-                GradientButton(text = "Buy", onClick = onBuyClick, modifier = Modifier.weight(1f))
-                GradientButton(text = "Sell", onClick = onSellClick, modifier = Modifier.weight(1f))
+                AppButton(text = "Buy", onClick = onBuyClick, modifier = Modifier.weight(1f))
+                AppButton(text = "Sell", onClick = onSellClick, modifier = Modifier.weight(1f))
             }
 
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(24.dp))
 
             SegmentedTabs(
                 items = listOf(WalletTab.YOUR_COINS to "Your coins", WalletTab.ALL_COINS to "All coins"),
@@ -331,5 +310,76 @@ private fun AllCoinCard(coin: CoinDetails, onClick: () -> Unit) {
         primaryValue = ReaisFormatter.format(coin.currentPrice),
         secondaryValue = coin.name,
         onClick = onClick,
+    )
+}
+
+
+@Preview(showBackground = true)
+@Composable
+fun WalletContentPreview() {
+    WalletContent(
+        uiState = WalletUiState(
+            isLoading = false,
+            balance = WalletBalance(
+                totalReais = 2000.0,
+                changeAmount24h = 1.0,
+                changePercentage24h = 0.0
+            ),
+            selectedTab = WalletTab.ALL_COINS,
+//            selectedTab = WalletTab.YOUR_COINS,
+            allCoins = listOf(
+                CoinDetails(
+                    id = "btc",
+                    name = "Bitcoin",
+                    symbol = "BTC",
+                    currentPrice = 500.0,
+                    priceChange24h = 115.0,
+                    priceChangePercentage24h = 1.0,
+                    imageUrl = "",
+                    marketCapRank = null
+                ),
+                CoinDetails(
+                    id = "etc",
+                    name = "Eth",
+                    symbol = "ETH",
+                    currentPrice = 100.0,
+                    priceChange24h = 15.0,
+                    priceChangePercentage24h = 1.5,
+                    imageUrl = "",
+                    marketCapRank = null
+                ),
+                CoinDetails(
+                    id = "oth",
+                    name = "Oth",
+                    symbol = "OTH",
+                    currentPrice = 5.0,
+                    priceChange24h = 0.0,
+                    priceChangePercentage24h = 0.0,
+                    imageUrl = "",
+                    marketCapRank = null
+                )
+            ),
+            yourCoins = listOf(
+                CoinBalance(
+                    coin = CoinDetails(
+                        id = "btc",
+                        name = "Bitcoin",
+                        symbol = "BTC",
+                        currentPrice = 500.0,
+                        priceChange24h = 115.0,
+                        priceChangePercentage24h = 1.0,
+                        imageUrl = "",
+                        marketCapRank = null
+                    ),
+                    amountOwned = 1.0,
+                    valueInReais = 1000.0,
+                )
+            ),
+        ),
+        onTabSelected = {},
+        onBuyClick = {},
+        onSellClick = {},
+        onCoinClick = {},
+        onRetryClick = {},
     )
 }

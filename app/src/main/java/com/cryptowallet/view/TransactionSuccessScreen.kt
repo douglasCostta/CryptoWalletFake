@@ -19,19 +19,24 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.cryptowallet.model.TransactionType
 import com.cryptowallet.ui.theme.AuthLabelMuted
+import com.cryptowallet.ui.theme.CryptoWalletTheme
 import com.cryptowallet.ui.theme.WalletPositive
 import com.cryptowallet.ui.theme.WalletTextPrimary
 import com.cryptowallet.view.component.AppBackground1
-import com.cryptowallet.view.components.GradientButton
-import java.util.Locale
-import java.util.concurrent.TimeUnit
+import com.cryptowallet.view.component.AppBackground2
+import com.cryptowallet.view.component.AppButton
+import com.cryptowallet.view.component.AppCard
 import nl.dionsegijn.konfetti.compose.KonfettiView
 import nl.dionsegijn.konfetti.core.Party
 import nl.dionsegijn.konfetti.core.Position
 import nl.dionsegijn.konfetti.core.emitter.Emitter
+import java.util.Locale
+import java.util.concurrent.TimeUnit
 
 @Composable
 fun TransactionSuccessScreen(
@@ -59,34 +64,55 @@ fun TransactionSuccessScreen(
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(24.dp),
+                .padding(top = 20.dp, bottom = 20.dp),
         ) {
             Column(
                 modifier = Modifier.fillMaxSize(),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center,
             ) {
-                Icon(
-                    imageVector = Icons.Filled.CheckCircle,
-                    contentDescription = null,
-                    tint = WalletPositive,
-                    modifier = Modifier.size(96.dp),
-                )
-                Spacer(modifier = Modifier.height(16.dp))
-                Text(
-                    text = "Transaction Completed",
-                    style = MaterialTheme.typography.headlineSmall,
-                    fontWeight = FontWeight.Bold,
-                    color = WalletTextPrimary,
-                )
-                Spacer(modifier = Modifier.height(8.dp))
-                Text(
-                    text = "You successfully $verb ${String.format(Locale.US, "%.6f", amount)} $coinSymbol",
-                    color = AuthLabelMuted,
-                )
+                AppCard() {
+                    AppBackground2() {
+                        Column(
+                            modifier = Modifier
+                                .padding(20.dp)
+                                .fillMaxWidth()
+                                .height(300.dp),
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            verticalArrangement = Arrangement.Center
+                        ) {
+                            Icon(
+                                imageVector = Icons.Filled.CheckCircle,
+                                contentDescription = null,
+                                tint = WalletPositive,
+                                modifier = Modifier.size(96.dp),
+                            )
+                            Spacer(modifier = Modifier.height(16.dp))
+                            Text(
+                                text = "Transaction Completed",
+                                style = MaterialTheme.typography.headlineSmall,
+                                fontWeight = FontWeight.Bold,
+                                color = WalletTextPrimary,
+                            )
+                            Spacer(modifier = Modifier.height(8.dp))
+                            Text(
+                                text = "You successfully $verb ${
+                                    String.format(
+                                        Locale.US,
+                                        "%.6f",
+                                        amount
+                                    )
+                                } $coinSymbol",
+                                color = AuthLabelMuted,
+                                textAlign = TextAlign.Center
+                            )
+                        }
+                    }
+                }
+                Spacer(Modifier.height(100.dp))
             }
 
-            GradientButton(
+            AppButton(
                 text = "Back to Wallet",
                 onClick = onBackToWallet,
                 modifier = Modifier
@@ -96,5 +122,18 @@ fun TransactionSuccessScreen(
 
             KonfettiView(modifier = Modifier.fillMaxSize(), parties = confettiParties)
         }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun Preview() {
+    CryptoWalletTheme {
+        TransactionSuccessScreen(
+            type = TransactionType.BUY,
+            coinSymbol = "ETC",
+            amount = 0.01,
+            onBackToWallet = {  },
+        )
     }
 }

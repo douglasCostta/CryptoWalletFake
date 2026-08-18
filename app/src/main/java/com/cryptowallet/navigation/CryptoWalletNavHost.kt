@@ -37,7 +37,6 @@ fun CryptoWalletNavHost(
                 onBuyClick = { navController.navigate(Routes.Trade(TransactionType.BUY)) },
                 onSellClick = { navController.navigate(Routes.Trade(TransactionType.SELL)) },
                 onCoinClick = { coinId -> navController.navigate(Routes.Dashboard(coinId)) },
-                onLogout = onLogout,
             )
         }
         composable<Routes.Trade> { backStackEntry ->
