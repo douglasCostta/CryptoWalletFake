@@ -1,7 +1,6 @@
 package com.cryptowallet.navigation
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
@@ -31,7 +30,6 @@ fun CryptoWalletNavHost(
             val viewModel: WalletViewModel = viewModel(
                 factory = viewModelFactory { initializer { WalletViewModel(walletRepository) } },
             )
-            LaunchedEffect(Unit) { viewModel.refresh() }
             WalletScreen(
                 viewModel = viewModel,
                 onBuyClick = { navController.navigate(Routes.Trade(TransactionType.BUY)) },
