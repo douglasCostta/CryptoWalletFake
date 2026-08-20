@@ -14,8 +14,24 @@ import com.cryptowallet.model.toCoinListItem
 
 class CoinGeckoRepository(private val service: CoinGeckoService) {
 
+    private var cachedAllCoins: List<CoinDetails>? = null
+    private var lastFetchAllCoins: Long = 0
+    private var cachedCoinsByIds: Map<String, List<CoinDetails>> = emptyMap()
+    private var lastFetchCoinsByIds: Map<String, Long> = emptyMap()
+    private val CACHE_EXPIRATION_MS = 2 * 60 * 1000 // 2 minutos
+
     suspend fun getCoins(vsCurrency: String = CurrencyConstants.DEFAULT_VS_CURRENCY): List<CoinDetails> {
-        return service.getAllCoins(vsCurrency = vsCurrency).map { it.toCoinListItem() }
+        val now = System.currentTimeMillis()
+        if (cachedAllCoins != null && (now - lastFetchAllCoins) < CACHE_EXPIRATION_MS) {
+            return cachedAllCoins!!
+        }
+
+        return service.getAllCoins(vsCurrency = vsCurrency)
+            .map { it.toCoinListItem() }
+            .also {
+                cachedAllCoins = it
+                lastFetchAllCoins = now
+            }
     }
 
     suspend fun getCoinsByIds(
@@ -23,7 +39,20 @@ class CoinGeckoRepository(private val service: CoinGeckoService) {
         vsCurrency: String = CurrencyConstants.DEFAULT_VS_CURRENCY,
     ): List<CoinDetails> {
         if (ids.isEmpty()) return emptyList()
-        return service.getCoinById(vsCurrency = vsCurrency, ids = ids.joinToString(",")).map { it.toCoinListItem() }
+
+        val cacheKey = "${vsCurrency}_${ids.sorted().joinToString(",")}"
+        val now = System.currentTimeMillis()
+
+        if (cachedCoinsByIds.containsKey(cacheKey) && (now - (lastFetchCoinsByIds[cacheKey] ?: 0)) < CACHE_EXPIRATION_MS) {
+            return cachedCoinsByIds[cacheKey]!!
+        }
+
+        return service.getCoinById(vsCurrency = vsCurrency, ids = ids.joinToString(","))
+            .map { it.toCoinListItem() }
+            .also {
+                cachedCoinsByIds = cachedCoinsByIds + (cacheKey to it)
+                lastFetchCoinsByIds = lastFetchCoinsByIds + (cacheKey to now)
+            }
     }
 
     suspend fun getCoinDashboard(coinId: String, vsCurrency: String = CurrencyConstants.DEFAULT_VS_CURRENCY): CoinDashboard {
