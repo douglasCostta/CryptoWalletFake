@@ -2,11 +2,11 @@
 
 ## 👥 Participantes
 
-* Gabriela de Souza
-* Douglas Costa Ferreira
-* Jonas Melo da Paz
 * Anderson dos Santos Carvalho
+* Douglas Costa Ferreira
 * Felipe Saboya de Santa Cruz Abreu
+* Gabriela de Souza
+* Jonas Melo da Paz
 
 ---
 
