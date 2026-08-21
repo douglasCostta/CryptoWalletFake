@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.cryptowallet.data.repository.WalletRepository
 import com.cryptowallet.model.CoinBalance
-import com.cryptowallet.model.CoinListItem
+import com.cryptowallet.model.CoinDetails
 import com.cryptowallet.model.WalletBalance
 import com.cryptowallet.model.toWalletBalance
 import kotlinx.coroutines.Job
@@ -22,7 +22,7 @@ data class WalletUiState(
     val isLoading: Boolean = false,
     val balance: WalletBalance? = null,
     val yourCoins: List<CoinBalance> = emptyList(),
-    val allCoins: List<CoinListItem> = emptyList(),
+    val allCoins: List<CoinDetails> = emptyList(),
     val selectedTab: WalletTab = WalletTab.YOUR_COINS,
     val errorMessage: String? = null,
 )

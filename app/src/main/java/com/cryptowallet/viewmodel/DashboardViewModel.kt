@@ -8,6 +8,7 @@ import com.cryptowallet.data.remote.RetrofitInstance
 import com.cryptowallet.data.remote.service.CoinGeckoService
 import com.cryptowallet.data.repository.BinanceRepository
 import com.cryptowallet.data.repository.CoinGeckoRepository
+import com.cryptowallet.data.repository.WalletRepository
 import com.cryptowallet.model.CoinGraphPoints
 import com.cryptowallet.model.GraphCoinDashboard
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -17,7 +18,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 data class DashboardUiState(
-    val coinSelected: String = "bitcoin", //TODO: obter da tela HOME
+    val coinSelected: String = "bitcoin",
     val selectedRange: ChartRangeEnum = ChartRangeEnum.TODAY,
     var isLoadingCoins: Boolean = false,
     var errorMessage: String? = null,
@@ -30,26 +31,42 @@ data class DashboardUiState(
     val currentPrice: Double = 0.0,
     val priceChange24h: Double = 0.0,
     val priceChangePercentage24h: Double = 0.0,
-    val symbol: String = ""
+    val symbol: String = "",
+    val amountOwned: Double = 0.0,
 )
 
-class DashboardViewModel() : ViewModel() {
+class DashboardViewModel(
+    initialCoinId: String = "bitcoin",
+    private val walletRepository: WalletRepository? = null,
+) : ViewModel() {
     private val _service = CoinGeckoService(RetrofitInstance.api)
     private val _repository = CoinGeckoRepository(_service)
     private val _binanceRepository = BinanceRepository(RetrofitInstance.binanceApi)
     private var _binanceWS: BinanceWebSocketManager? = null
-    private val _uiState = MutableStateFlow(DashboardUiState())
+    private val _uiState = MutableStateFlow(DashboardUiState(coinSelected = initialCoinId))
     val uiState: StateFlow<DashboardUiState> = _uiState.asStateFlow()
 
     init {
         loadCoinGraph(_uiState.value.coinSelected)
+        loadOwnedAmount(_uiState.value.coinSelected)
+    }
+
+    private fun loadOwnedAmount(coinId: String) {
+        val repository = walletRepository ?: return
+        viewModelScope.launch {
+            runCatching { repository.getWalletState() }
+                .onSuccess { state ->
+                    val amount = state.holdings.find { it.coinId == coinId }?.amount ?: 0.0
+                    _uiState.update { it.copy(amountOwned = amount) }
+                }
+        }
     }
 
     fun loadCoinGraph(coinId: String) {
         viewModelScope.launch {
             try {
                 _uiState.update { it.copy(isLoadingCoins = true, errorMessage = null) }
-                
+
                 val infoCoin = _repository.getCoinDashboardPayload(coinId = coinId)
 
                 _uiState.update { it.copy(
@@ -75,7 +92,7 @@ class DashboardViewModel() : ViewModel() {
         _uiState.update { state ->
             val currentPoints = state.graphPoints.toMutableList()
             if (currentPoints.isEmpty()) return@update state
-            
+
             val last = currentPoints.last()
             if (newPoint.timestamp >= last.timestamp) {
                 val index = currentPoints.indexOfLast { it.timestamp == newPoint.timestamp }
@@ -94,7 +111,7 @@ class DashboardViewModel() : ViewModel() {
             val updatedGraph = if (state.selectedRange == ChartRangeEnum.REAL_TIME && state.infoCoin != null) {
                 val currentCoin = state.infoCoin!!.dashboard.coinDetails
                 val newPrice = newPoint.close
-                
+
                 val price24hAgo = currentCoin.currentPrice / (1 + (currentCoin.priceChangePercentage24h / 100))
                 val newChange = newPrice - price24hAgo
                 val newPercentage = (newChange / price24hAgo) * 100

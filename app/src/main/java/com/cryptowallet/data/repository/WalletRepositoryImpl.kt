@@ -2,7 +2,7 @@ package com.cryptowallet.data.repository
 
 import com.cryptowallet.data.local.WalletLocalDataSource
 import com.cryptowallet.model.CoinBalance
-import com.cryptowallet.model.CoinListItem
+import com.cryptowallet.model.CoinDetails
 import com.cryptowallet.model.TransactionRequest
 import com.cryptowallet.model.TransactionResult
 import com.cryptowallet.model.TransactionType
@@ -16,7 +16,7 @@ class WalletRepositoryImpl(
     private val localDataSource: WalletLocalDataSource,
 ) : WalletRepository {
 
-    override suspend fun getTradableCoins(): List<CoinListItem> =
+    override suspend fun getTradableCoins(): List<CoinDetails> =
         coinGeckoRepository.getCoinsByIds(ids = SUPPORTED_COIN_IDS, vsCurrency = VS_CURRENCY)
 
     override suspend fun getCoinBalances(): List<CoinBalance> {
@@ -32,7 +32,7 @@ class WalletRepositoryImpl(
         }
     }
 
-    override suspend fun getAllCoins(): List<CoinListItem> =
+    override suspend fun getAllCoins(): List<CoinDetails> =
         coinGeckoRepository.getCoins(vsCurrency = VS_CURRENCY)
 
     override suspend fun getWalletState(): WalletState = localDataSource.getWalletState()

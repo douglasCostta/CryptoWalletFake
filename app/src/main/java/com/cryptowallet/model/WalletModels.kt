@@ -17,7 +17,7 @@ data class WalletState(
 )
 
 data class CoinBalance(
-    val coin: CoinListItem,
+    val coin: CoinDetails,
     val amountOwned: Double,
     val valueInReais: Double,
 )

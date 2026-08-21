@@ -3,7 +3,7 @@ package com.cryptowallet.viewmodel
 import com.cryptowallet.MainDispatcherRule
 import com.cryptowallet.fakes.FakeWalletRepository
 import com.cryptowallet.model.CoinBalance
-import com.cryptowallet.model.CoinListItem
+import com.cryptowallet.model.CoinDetails
 import com.cryptowallet.model.WalletState
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.advanceUntilIdle
@@ -19,7 +19,7 @@ class WalletViewModelTest {
     @get:Rule
     val mainDispatcherRule = MainDispatcherRule()
 
-    private fun ethCoin() = CoinListItem(
+    private fun ethCoin() = CoinDetails(
         id = "ethereum", symbol = "eth", name = "Ethereum", imageUrl = "",
         currentPrice = 1939.74, priceChange24h = -20.0, priceChangePercentage24h = -1.02, marketCapRank = 2,
     )

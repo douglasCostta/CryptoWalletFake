@@ -3,7 +3,7 @@ package com.cryptowallet.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.cryptowallet.data.repository.WalletRepository
-import com.cryptowallet.model.CoinListItem
+import com.cryptowallet.model.CoinDetails
 import com.cryptowallet.model.TransactionRequest
 import com.cryptowallet.model.TransactionResult
 import com.cryptowallet.model.TransactionType
@@ -14,11 +14,12 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import java.util.Locale
 
 data class TradeUiState(
     val type: TransactionType,
-    val availableCoins: List<CoinListItem> = emptyList(),
-    val selectedCoin: CoinListItem? = null,
+    val availableCoins: List<CoinDetails> = emptyList(),
+    val selectedCoin: CoinDetails? = null,
     val currentPrice: Double = 0.0,
     val balanceBefore: WalletState? = null,
     val amountInReais: String = "",
@@ -32,6 +33,7 @@ data class TradeUiState(
 class BuySellViewModel(
     private val repository: WalletRepository,
     type: TransactionType,
+    private val preselectedCoinId: String? = null,
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(TradeUiState(type = type))
@@ -48,7 +50,8 @@ class BuySellViewModel(
             runCatching { repository.getTradableCoins() }
                 .onSuccess { coins ->
                     _uiState.update { it.copy(availableCoins = coins) }
-                    coins.firstOrNull()?.let(::onCoinSelected)
+                    val initialCoin = coins.find { it.id == preselectedCoinId } ?: coins.firstOrNull()
+                    initialCoin?.let(::onCoinSelected)
                 }
                 .onFailure { throwable ->
                     _uiState.update { it.copy(errorMessage = throwable.message ?: "Erro ao carregar moedas.") }
@@ -56,7 +59,7 @@ class BuySellViewModel(
         }
     }
 
-    fun onCoinSelected(coin: CoinListItem) {
+    fun onCoinSelected(coin: CoinDetails) {
         _uiState.update {
             it.copy(
                 selectedCoin = coin,
@@ -83,7 +86,7 @@ class BuySellViewModel(
         _uiState.update {
             val updated = it.copy(
                 amountInReais = text,
-                amountInCoin = coinAmount?.toString().orEmpty(),
+                amountInCoin = coinAmount?.let { String.format(Locale.US, "%.6f", it) }.orEmpty(),
                 errorMessage = null,
                 result = null,
             )
@@ -98,7 +101,7 @@ class BuySellViewModel(
         _uiState.update {
             val updated = it.copy(
                 amountInCoin = text,
-                amountInReais = reais?.toString().orEmpty(),
+                amountInReais = reais?.let { String.format(Locale.US, "%.2f", it) }.orEmpty(),
                 errorMessage = null,
                 result = null,
             )

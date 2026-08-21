@@ -12,8 +12,12 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -38,9 +42,14 @@ import com.cryptowallet.view.component.AppButton
 import com.cryptowallet.viewmodel.DashboardViewModel
 import com.cryptowallet.view.component.PriceChart
 import com.cryptowallet.view.component.RangeSelectorRow
+import java.util.Locale
 
 @Composable
-fun DashboardScreen(viewModel: DashboardViewModel = viewModel()) {
+fun DashboardScreen(
+    onBack: () -> Unit = {},
+    onBuyClick: () -> Unit = {},
+    viewModel: DashboardViewModel = viewModel(),
+) {
     val uiState by viewModel.uiState.collectAsState()
     val chartPoints = uiState.graphPoints
 
@@ -49,6 +58,14 @@ fun DashboardScreen(viewModel: DashboardViewModel = viewModel()) {
             modifier = Modifier
                 .safeDrawingPadding()
         ) {
+            IconButton(onClick = onBack) {
+                Icon(
+                    imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                    contentDescription = "Voltar",
+                    tint = Color.White,
+                )
+            }
+
             if (uiState.isLoadingCoins) {
                 Box(
                     modifier = Modifier.fillMaxSize(),
@@ -198,7 +215,7 @@ fun DashboardScreen(viewModel: DashboardViewModel = viewModel()) {
                     )
 
                     Text(
-                        text = "2.000912831231 ${uiState.symbol}", //TODO: validar onde pegar a quantidade de moedas
+                        text = "${String.format(Locale.US, "%.6f", uiState.amountOwned)} ${uiState.symbol}",
                         modifier = Modifier.weight(1f),
                         textAlign = TextAlign.End,
                         fontSize = 14.sp,
@@ -213,7 +230,7 @@ fun DashboardScreen(viewModel: DashboardViewModel = viewModel()) {
                 AppButton(
                     text = "Buy ${uiState.symbol}",
                     modifier = Modifier.fillMaxWidth(),
-                    action = {} //TODO: fazer navegacao
+                    action = onBuyClick,
                 )
 
             }
