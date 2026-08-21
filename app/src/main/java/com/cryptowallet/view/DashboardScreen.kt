@@ -12,6 +12,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.CircularProgressIndicator
@@ -74,155 +76,163 @@ fun DashboardScreen(
                     CircularProgressIndicator(color = Color(0xFFFF7043))
                 }
             } else {
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.Start,
-                ) {
-                    AsyncImage(
-                        model = uiState.imageUrl,
-                        contentDescription = uiState.coinName,
-                        modifier = Modifier.size(40.dp),
-                    )
-                    Spacer(modifier = Modifier.width(8.dp))
-                    Text(
-                        text = uiState.coinName,
-                        fontSize = 22.sp,
-                        fontWeight = FontWeight.W500,
-                        fontFamily = FontFamily.Default,
-                        color = Color.White,
-                    )
-                }
-
-                Spacer(modifier = Modifier.size(15.dp))
-
+                // Conteúdo rolável: ocupa o espaço restante (weight(1f)) e rola internamente
+                // caso não caiba na tela, evitando que o botão "Buy" fique atrás da bottom bar.
                 Column(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalAlignment = Alignment.Start,
-                    verticalArrangement = Arrangement.Center,
+                    modifier = Modifier
+                        .weight(1f)
+                        .verticalScroll(rememberScrollState()),
                 ) {
-                    Text(
-                        text = formatValueUsd(uiState.currentPrice),
-                        fontSize = 27.sp,
-                        fontWeight = FontWeight.W500,
-                        fontFamily = FontFamily.Default,
-                        color = Color.White,
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.Start,
+                    ) {
+                        AsyncImage(
+                            model = uiState.imageUrl,
+                            contentDescription = uiState.coinName,
+                            modifier = Modifier.size(40.dp),
+                        )
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Text(
+                            text = uiState.coinName,
+                            fontSize = 22.sp,
+                            fontWeight = FontWeight.W500,
+                            fontFamily = FontFamily.Default,
+                            color = Color.White,
+                        )
+                    }
+
+                    Spacer(modifier = Modifier.size(15.dp))
+
+                    Column(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalAlignment = Alignment.Start,
+                        verticalArrangement = Arrangement.Center,
+                    ) {
+                        Text(
+                            text = formatValueUsd(uiState.currentPrice),
+                            fontSize = 27.sp,
+                            fontWeight = FontWeight.W500,
+                            fontFamily = FontFamily.Default,
+                            color = Color.White,
+                        )
+                        Text(
+                            text = "${formatPriceChange(uiState.priceChange24h)} (${formatPercentage(uiState.priceChangePercentage24h)})",
+                            fontSize = 16.sp,
+                            fontWeight = FontWeight.W400,
+                            fontFamily = FontFamily.Default,
+                            color = if (uiState.priceChangePercentage24h < 0) Color(0xFFFF6B6B) else Color(0xFF35C759),
+                        )
+                    }
+
+                    Spacer(modifier = Modifier.size(15.dp))
+
+                    RangeSelectorRow (
+                        selectedRange = uiState.selectedRange,
+                        onRangeSelected = { range -> viewModel.selectRange(range) },
                     )
-                    Text(
-                        text = "${formatPriceChange(uiState.priceChange24h)} (${formatPercentage(uiState.priceChangePercentage24h)})",
-                        fontSize = 16.sp,
-                        fontWeight = FontWeight.W400,
-                        fontFamily = FontFamily.Default,
-                        color = if (uiState.priceChangePercentage24h < 0) Color(0xFFFF6B6B) else Color(0xFF35C759),
-                    )
-                }
 
-                Spacer(modifier = Modifier.size(15.dp))
+                    Spacer(modifier = Modifier.height(12.dp))
 
-                RangeSelectorRow (
-                    selectedRange = uiState.selectedRange,
-                    onRangeSelected = { range -> viewModel.selectRange(range) },
-                )
-
-                Spacer(modifier = Modifier.height(12.dp))
-
-                Column(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.Center,
-                ) {
-                    if (chartPoints.isEmpty()) {
-                        Box(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .height(280.dp),
-                            contentAlignment = Alignment.Center,
-                        ) {
-                            if (uiState.errorMessage != null) {
-                                Text(
-                                    text = "No data available for the selected range.",
-                                    color = Color(0xFF9A9A9A),
-                                    textAlign = TextAlign.Center,
-                                )
-                            } else {
-                                CircularProgressIndicator(color = Color(0xFFFF7043))
+                    Column(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.Center,
+                    ) {
+                        if (chartPoints.isEmpty()) {
+                            Box(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .height(280.dp),
+                                contentAlignment = Alignment.Center,
+                            ) {
+                                if (uiState.errorMessage != null) {
+                                    Text(
+                                        text = "No data available for the selected range.",
+                                        color = Color(0xFF9A9A9A),
+                                        textAlign = TextAlign.Center,
+                                    )
+                                } else {
+                                    CircularProgressIndicator(color = Color(0xFFFF7043))
+                                }
                             }
-                        }
-                    } else {
-                        Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .height(280.dp),
-                        ) {
-                            key(uiState.selectedRange) {
-                                PriceChart(
-                                    chartPoints = chartPoints,
-                                    range = uiState.selectedRange,
-                                    modifier = Modifier
-                                        .weight(1f)
-                                        .fillMaxHeight(),
-                                )
+                        } else {
+                            Row(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .height(280.dp),
+                            ) {
+                                key(uiState.selectedRange) {
+                                    PriceChart(
+                                        chartPoints = chartPoints,
+                                        range = uiState.selectedRange,
+                                        modifier = Modifier
+                                            .weight(1f)
+                                            .fillMaxHeight(),
+                                    )
+                                }
                             }
                         }
                     }
-                }
 
-                Spacer(modifier = Modifier.height(24.dp))
-
-                Text(
-                    text = "MARKET DATA",
-                    fontSize = 16.sp,
-                    fontWeight = FontWeight.W500,
-                    color = Color(0xFF9A9A9A),
-                )
-
-                Spacer(modifier = Modifier.height(8.dp))
-                HorizontalDivider(color = Color(0xFF3A3A3A))
-                Spacer(modifier = Modifier.height(12.dp))
-
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                ) {
-                    MarketDataItem(
-                        title = "MARKET CAP",
-                        value = formatCompactUsd(uiState.marketCap ?: 0.0),
-                    )
-                    MarketDataItem(
-                        title = "24H VOLUME",
-                        value = formatCompactUsd(uiState.totalVolume24h ?: 0.0),
-                    )
-                }
-
-                Spacer(modifier = Modifier.weight(1f))
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.Start,
-                ) {
-                    AsyncImage(
-                        model = uiState.imageUrl,
-                        contentDescription = uiState.coinName,
-                        modifier = Modifier.size(18.dp),
-                    )
-                    Spacer(modifier = Modifier.width(8.dp))
-                    Text(
-                        text = "${uiState.symbol} Wallet",
-                        fontSize = 14.sp,
-                        fontWeight = FontWeight.W500,
-                        fontFamily = FontFamily.Default,
-                        color = Color.White,
-                    )
+                    Spacer(modifier = Modifier.height(24.dp))
 
                     Text(
-                        text = "${String.format(Locale.US, "%.6f", uiState.amountOwned)} ${uiState.symbol}",
-                        modifier = Modifier.weight(1f),
-                        textAlign = TextAlign.End,
-                        fontSize = 14.sp,
+                        text = "MARKET DATA",
+                        fontSize = 16.sp,
                         fontWeight = FontWeight.W500,
-                        fontFamily = FontFamily.Default,
-                        color = Color.White,
+                        color = Color(0xFF9A9A9A),
                     )
+
+                    Spacer(modifier = Modifier.height(8.dp))
+                    HorizontalDivider(color = Color(0xFF3A3A3A))
+                    Spacer(modifier = Modifier.height(12.dp))
+
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                    ) {
+                        MarketDataItem(
+                            title = "MARKET CAP",
+                            value = formatCompactUsd(uiState.marketCap ?: 0.0),
+                        )
+                        MarketDataItem(
+                            title = "24H VOLUME",
+                            value = formatCompactUsd(uiState.totalVolume24h ?: 0.0),
+                        )
+                    }
+
+                    Spacer(modifier = Modifier.weight(1f))
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.Start,
+                    ) {
+                        AsyncImage(
+                            model = uiState.imageUrl,
+                            contentDescription = uiState.coinName,
+                            modifier = Modifier.size(18.dp),
+                        )
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Text(
+                            text = "${uiState.symbol} Wallet",
+                            fontSize = 14.sp,
+                            fontWeight = FontWeight.W500,
+                            fontFamily = FontFamily.Default,
+                            color = Color.White,
+                        )
+
+                        Text(
+                            text = "${String.format(Locale.US, "%.6f", uiState.amountOwned)} ${uiState.symbol}",
+                            modifier = Modifier.weight(1f),
+                            textAlign = TextAlign.End,
+                            fontSize = 14.sp,
+                            fontWeight = FontWeight.W500,
+                            fontFamily = FontFamily.Default,
+                            color = Color.White,
+                        )
+                    }
                 }
 
                 Spacer(modifier = Modifier.height(16.dp))
