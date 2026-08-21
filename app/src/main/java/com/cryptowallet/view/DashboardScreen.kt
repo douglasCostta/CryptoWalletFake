@@ -76,8 +76,6 @@ fun DashboardScreen(
                     CircularProgressIndicator(color = Color(0xFFFF7043))
                 }
             } else {
-                // Conteúdo rolável: ocupa o espaço restante (weight(1f)) e rola internamente
-                // caso não caiba na tela, evitando que o botão "Buy" fique atrás da bottom bar.
                 Column(
                     modifier = Modifier
                         .weight(1f)
