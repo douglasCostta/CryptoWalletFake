@@ -40,9 +40,9 @@ Permitir que o usuário do aplicativo possa:
 
 ## 📱 Capturas de Tela
 
-| Carteira (Home) | Login | Detalhe da Moeda | Venda (Sell) |
+| Login | Carteira (Home) | Detalhe da Moeda | Venda (Sell) |
 |:---:|:---:|:---:|:---:|
-| ![Tela da Carteira](docs/images/wallet-home.png) | ![Tela de Login](docs/images/login.png) | ![Detalhe da Moeda](docs/images/coin-detail.png) | ![Tela de Venda](docs/images/buy-sell.png) |
+| ![Tela de Login](docs/images/login.png) | ![Tela da Carteira](docs/images/wallet-home.png) | ![Detalhe da Moeda](docs/images/coin-detail.png) | ![Tela de Venda](docs/images/buy-sell.png) |
 
 ## 🏛️ Arquitetura
 
