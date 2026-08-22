@@ -5,7 +5,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.safeDrawingPadding
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
@@ -13,20 +13,29 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import androidx.compose.foundation.layout.PaddingValues
 
 @Composable
 fun AppBackground2(
     modifier: Modifier = Modifier,
     fillParent: Boolean = true,
     applyScreenPadding: Boolean = true,
+    applyBottomScaffoldPadding: Boolean = true,
     content: @Composable BoxScope.() -> Unit,
 ) {
     val scaffoldPadding = LocalScaffoldPadding.current
     val containerModifier = if (fillParent) modifier.fillMaxSize() else modifier
+    val screenPadding = if (applyBottomScaffoldPadding) {
+        scaffoldPadding
+    } else {
+        PaddingValues(
+            top = scaffoldPadding.calculateTopPadding(),
+        )
+    }
     val contentModifier = if (applyScreenPadding) {
         Modifier
-            .padding(scaffoldPadding)
-            .safeDrawingPadding()
+            .padding(screenPadding)
+            .statusBarsPadding()
     } else {
         Modifier
     }

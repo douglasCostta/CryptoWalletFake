@@ -55,7 +55,7 @@ fun BottomNavBar(
             .clip(RoundedCornerShape(topStart = 5.dp, topEnd = 5.dp))
             .background(
                 brush = Brush.horizontalGradient(
-                    colors = listOf(CryptoDarkOrange, CryptoOrange),
+                    colors = listOf(CryptoOrange, CryptoDarkOrange),
                 ),
             )
             .border(

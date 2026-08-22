@@ -6,6 +6,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -50,6 +51,7 @@ import com.cryptowallet.view.component.AppBackground2
 import com.cryptowallet.view.component.AppButton
 import com.cryptowallet.view.component.AppCard
 import com.cryptowallet.view.component.AppPageTitle
+import com.cryptowallet.view.component.LocalScaffoldPadding
 import com.cryptowallet.view.component.SegmentedTabs
 import com.cryptowallet.viewmodel.WalletTab
 import com.cryptowallet.viewmodel.WalletUiState
@@ -58,7 +60,8 @@ import java.text.NumberFormat
 import java.util.Locale
 import kotlin.math.abs
 
-private val ReaisFormatter: NumberFormat = NumberFormat.getCurrencyInstance(Locale("pt", "BR"))
+private val ReaisFormatter: NumberFormat =
+    NumberFormat.getCurrencyInstance(Locale.forLanguageTag("pt-BR"))
 
 @Composable
 fun WalletScreen(
@@ -88,7 +91,12 @@ private fun WalletContent(
     onCoinClick: (String) -> Unit,
     onRetryClick: () -> Unit,
 ) {
-    AppBackground2 {
+    val scaffoldPadding = LocalScaffoldPadding.current
+    val listBottomPadding = scaffoldPadding.calculateBottomPadding() + 12.dp
+
+    AppBackground2(
+        applyBottomScaffoldPadding = false,
+    ) {
         Column(
             modifier = Modifier.fillMaxSize(),
         ) {
@@ -167,6 +175,7 @@ private fun WalletContent(
             when (uiState.selectedTab) {
                 WalletTab.YOUR_COINS -> LazyColumn(
                     verticalArrangement = Arrangement.spacedBy(8.dp),
+                    contentPadding = PaddingValues(bottom = listBottomPadding),
                 ) {
                     items(items = uiState.yourCoins, key = { it.coin.id }) { balance ->
                         YourCoinListRow(balance, onClick = { onCoinClick(balance.coin.id) })
@@ -176,6 +185,7 @@ private fun WalletContent(
                     columns = GridCells.Fixed(2),
                     horizontalArrangement = Arrangement.spacedBy(8.dp),
                     verticalArrangement = Arrangement.spacedBy(8.dp),
+                    contentPadding = PaddingValues(bottom = listBottomPadding),
                 ) {
                     items(items = uiState.allCoins, key = { it.id }) { coin ->
                         AllCoinCard(coin, onClick = { onCoinClick(coin.id) })
