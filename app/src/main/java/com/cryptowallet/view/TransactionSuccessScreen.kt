@@ -70,7 +70,11 @@ fun TransactionSuccessScreen(
                 verticalArrangement = Arrangement.Center,
             ) {
                 AppCard() {
-                    AppBackground2() {
+                    AppBackground2(
+                        modifier = Modifier.fillMaxWidth(),
+                        fillParent = false,
+                        applyScreenPadding = false,
+                    ) {
                         Column(
                             modifier = Modifier
                                 .padding(20.dp)

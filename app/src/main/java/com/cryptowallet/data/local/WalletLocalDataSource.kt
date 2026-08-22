@@ -42,12 +42,10 @@ class WalletLocalDataSource(
         val WALLET_STATE_KEY = stringPreferencesKey("wallet_state")
 
         val SEED_STATE = WalletState(
-            cashBalanceReais = 1074.32,
+            cashBalanceReais = 10000.00,
             holdings = listOf(
                 WalletHolding(coinId = "bitcoin", symbol = "BTC", amount = 0.0043),
-                WalletHolding(coinId = "ethereum", symbol = "ETH", amount = 0.039),
                 WalletHolding(coinId = "binancecoin", symbol = "BNB", amount = 0.07),
-                WalletHolding(coinId = "usd-coin", symbol = "USDC", amount = 2478.0),
             ),
         )
     }

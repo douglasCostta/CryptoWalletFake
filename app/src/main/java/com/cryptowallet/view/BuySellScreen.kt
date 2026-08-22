@@ -43,7 +43,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.cryptowallet.model.CoinDetails
 import com.cryptowallet.model.TransactionResult
@@ -53,16 +52,17 @@ import com.cryptowallet.ui.theme.AuthLabelMuted
 import com.cryptowallet.ui.theme.CryptoDarkOrange
 import com.cryptowallet.ui.theme.WalletTextPrimary
 import com.cryptowallet.view.component.AppBackground1
+import com.cryptowallet.view.component.AppBackground2
 import com.cryptowallet.view.component.AppButton
 import com.cryptowallet.view.component.AppCard
 import com.cryptowallet.view.component.AppPageTitle
-import com.cryptowallet.view.component.CardGradientBrush1
 import com.cryptowallet.viewmodel.BuySellViewModel
 import com.cryptowallet.viewmodel.TradeUiState
 import java.text.NumberFormat
 import java.util.Locale
 
-private val ReaisFormatter: NumberFormat = NumberFormat.getCurrencyInstance(Locale("pt", "BR"))
+private val ReaisFormatter: NumberFormat =
+    NumberFormat.getCurrencyInstance(Locale.forLanguageTag("pt-BR"))
 
 @Composable
 fun BuySellScreen(
@@ -170,47 +170,52 @@ private fun BuySellContent(
 
             Spacer(modifier = Modifier.height(16.dp))
             AppCard {
-                Column(
-                    modifier = Modifier
-                        .background(brush = CardGradientBrush1)
-                        .padding(20.dp)
+                AppBackground2(
+                    modifier = Modifier.fillMaxWidth(),
+                    fillParent = false,
+                    applyScreenPadding = false,
                 ) {
-                    uiState.balanceBefore?.let { before ->
-                        val ownedBefore =
-                            before.holdings.find { it.coinId == uiState.selectedCoin?.id }?.amount
-                                ?: 0.0
-                        BalanceSummaryRow(
-                            label = "Balance before",
-                            cash = ReaisFormatter.format(before.cashBalanceReais),
-                            symbol = symbol,
-                            amount = String.format(Locale.US, "%.6f", ownedBefore),
-                        )
-                        Spacer(modifier = Modifier.height(20.dp))
-                    }
+                    Column(
+                        modifier = Modifier
+                            .padding(20.dp)
+                    ) {
+                        uiState.balanceBefore?.let { before ->
+                            val ownedBefore =
+                                before.holdings.find { it.coinId == uiState.selectedCoin?.id }?.amount
+                                    ?: 0.0
+                            BalanceSummaryRow(
+                                label = "Balance before",
+                                cash = ReaisFormatter.format(before.cashBalanceReais),
+                                symbol = symbol,
+                                amount = String.format(Locale.US, "%.6f", ownedBefore),
+                            )
+                            Spacer(modifier = Modifier.height(20.dp))
+                        }
 
-                    AmountRow(
-                        label = "Amount in R$",
-                        value = uiState.amountInReais,
-                        onValueChange = onAmountInReaisChanged,
-                    )
-                    Spacer(modifier = Modifier.height(16.dp))
-                    AmountRow(
-                        label = "Amount in $symbol",
-                        value = uiState.amountInCoin,
-                        onValueChange = onAmountInCoinChanged,
-                    )
-
-                    uiState.balanceAfter?.let { after ->
-                        val ownedAfter =
-                            after.holdings.find { it.coinId == uiState.selectedCoin?.id }?.amount
-                                ?: 0.0
-                        Spacer(modifier = Modifier.height(20.dp))
-                        BalanceSummaryRow(
-                            label = "Balance after",
-                            cash = ReaisFormatter.format(after.cashBalanceReais),
-                            symbol = symbol,
-                            amount = String.format(Locale.US, "%.6f", ownedAfter),
+                        AmountRow(
+                            label = "Amount in R$",
+                            value = uiState.amountInReais,
+                            onValueChange = onAmountInReaisChanged,
                         )
+                        Spacer(modifier = Modifier.height(16.dp))
+                        AmountRow(
+                            label = "Amount in $symbol",
+                            value = uiState.amountInCoin,
+                            onValueChange = onAmountInCoinChanged,
+                        )
+
+                        uiState.balanceAfter?.let { after ->
+                            val ownedAfter =
+                                after.holdings.find { it.coinId == uiState.selectedCoin?.id }?.amount
+                                    ?: 0.0
+                            Spacer(modifier = Modifier.height(20.dp))
+                            BalanceSummaryRow(
+                                label = "Balance after",
+                                cash = ReaisFormatter.format(after.cashBalanceReais),
+                                symbol = symbol,
+                                amount = String.format(Locale.US, "%.6f", ownedAfter),
+                            )
+                        }
                     }
                 }
             }

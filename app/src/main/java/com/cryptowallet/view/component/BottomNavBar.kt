@@ -1,9 +1,10 @@
 package com.cryptowallet.view.component
 
 import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
@@ -24,6 +25,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -49,13 +52,21 @@ fun BottomNavBar(
     Row(
         modifier = modifier
             .fillMaxWidth()
+            .clip(RoundedCornerShape(topStart = 5.dp, topEnd = 5.dp))
             .background(
                 brush = Brush.horizontalGradient(
                     colors = listOf(CryptoDarkOrange, CryptoOrange),
                 ),
             )
+            .border(
+                width = 1.dp,
+                color = Color.White.copy(alpha = 0.14f),
+                shape = RoundedCornerShape(topStart = 28.dp, topEnd = 28.dp),
+            )
+            .padding(horizontal = 10.dp, vertical = 8.dp)
             .navigationBarsPadding(),
-        horizontalArrangement = Arrangement.SpaceEvenly,
+        horizontalArrangement = Arrangement.spacedBy(6.dp),
+        verticalAlignment = Alignment.CenterVertically,
     ) {
         BottomNavItem.entries.forEach { item ->
             BottomNavBarItem(
@@ -74,35 +85,40 @@ private fun RowScope.BottomNavBarItem(
     onClick: () -> Unit,
 ) {
     val indicatorColor by animateColorAsState(
-        targetValue = if (selected) Color.White.copy(alpha = 0.18f) else Color.Transparent,
+        targetValue = if (selected) Color.White.copy(alpha = 0.2f) else Color.Transparent,
         label = "bottomNavIndicator",
+    )
+    val iconTextColor by animateColorAsState(
+        targetValue = if (selected) Color.White else Color.White.copy(alpha = 0.78f),
+        label = "bottomNavIconTextColor",
+    )
+    val itemScale by animateFloatAsState(
+        targetValue = if (selected) 1.03f else 1f,
+        label = "bottomNavItemScale",
     )
 
     Column(
         modifier = Modifier
-            .padding(all = 1.dp)
-            .selectable(selected = selected, onClick = onClick),
+            .weight(1f)
+            .scale(itemScale)
+            .clip(RoundedCornerShape(14.dp))
+            .background(color = indicatorColor)
+            .selectable(selected = selected, onClick = onClick)
+            .padding(horizontal = 8.dp, vertical = 8.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(0.6.dp),
+        verticalArrangement = Arrangement.spacedBy(4.dp),
     ) {
-        Box(
-            modifier = Modifier
-                .size(40.dp)
-                .background(color = indicatorColor,
-                    shape = RoundedCornerShape(12.dp)),
-            contentAlignment = Alignment.Center,
-        ) {
-            Icon(
-                imageVector = item.icon,
-                contentDescription = item.label,
-                tint = if (selected) Color.White else Color.White.copy(alpha = 0.7f),
-            )
-        }
+        Icon(
+            imageVector = item.icon,
+            contentDescription = item.label,
+            tint = iconTextColor,
+            modifier = Modifier.size(22.dp),
+        )
         Text(
             text = item.label,
-            color = if (selected) Color.White else Color.White.copy(alpha = 0.7f),
+            color = iconTextColor,
             fontSize = 12.sp,
-            fontWeight = if (selected) FontWeight.SemiBold else FontWeight.Normal,
+            fontWeight = if (selected) FontWeight.SemiBold else FontWeight.Medium,
         )
     }
 }

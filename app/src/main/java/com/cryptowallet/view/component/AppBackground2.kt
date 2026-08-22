@@ -15,11 +15,24 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun AppBackground2(content: @Composable BoxScope.() -> Unit) {
+fun AppBackground2(
+    modifier: Modifier = Modifier,
+    fillParent: Boolean = true,
+    applyScreenPadding: Boolean = true,
+    content: @Composable BoxScope.() -> Unit,
+) {
     val scaffoldPadding = LocalScaffoldPadding.current
+    val containerModifier = if (fillParent) modifier.fillMaxSize() else modifier
+    val contentModifier = if (applyScreenPadding) {
+        Modifier
+            .padding(scaffoldPadding)
+            .safeDrawingPadding()
+    } else {
+        Modifier
+    }
+
     Box(
-        modifier = Modifier
-            .fillMaxSize()
+        modifier = containerModifier
             .background(Color(0xFF1E1E1E))
             .drawBehind {
                 drawRect(
@@ -46,10 +59,7 @@ fun AppBackground2(content: @Composable BoxScope.() -> Unit) {
             }
     ) {
         Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(scaffoldPadding)
-                .safeDrawingPadding()
+            modifier = contentModifier
                 .padding(20.dp),
         ) {
             content()
