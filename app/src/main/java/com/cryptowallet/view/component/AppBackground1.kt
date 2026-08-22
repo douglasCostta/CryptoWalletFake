@@ -3,14 +3,18 @@ package com.cryptowallet.view.component
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+
+val LocalScaffoldPadding = compositionLocalOf { PaddingValues(0.dp) }
 
 val AppGradientBrush1: Brush = Brush.verticalGradient(
 	colorStops = arrayOf(
@@ -27,11 +31,20 @@ val CardGradientBrush1: Brush = Brush.verticalGradient(
 
 @Composable
 fun AppBackground1(content: @Composable BoxScope.() -> Unit) {
+	val scaffoldPadding = LocalScaffoldPadding.current
 	Box(
 		modifier = Modifier
-			.background(brush = AppGradientBrush1)
-			.safeDrawingPadding()
-			.padding(20.dp)
-			.fillMaxSize(),
-	) { content() }
+			.fillMaxSize()
+			.background(brush = AppGradientBrush1),
+	) {
+		Box(
+			modifier = Modifier
+				.fillMaxSize()
+				.padding(scaffoldPadding)
+				.safeDrawingPadding()
+				.padding(20.dp),
+		) {
+			content()
+		}
+	}
 }

@@ -1,7 +1,10 @@
 package com.cryptowallet.navigation
 
+import androidx.compose.runtime.CompositionLocalProvider
+import com.cryptowallet.view.component.LocalScaffoldPadding
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Scaffold
-import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -52,6 +55,7 @@ fun CryptoWalletNavHost(
 
     Scaffold(
         containerColor = Color.Transparent,
+        contentWindowInsets = WindowInsets(0, 0, 0, 0),
         bottomBar = {
             if (showBottomBar) {
                 BottomNavBar(
@@ -83,67 +87,92 @@ fun CryptoWalletNavHost(
             }
         },
     ) { innerPadding ->
-        NavHost(
-            navController = navController,
-            startDestination = Routes.Wallet,
-            modifier = Modifier.padding(innerPadding),
-        ) {
-            composable<Routes.Wallet> {
-                val viewModel: WalletViewModel = viewModel(
-                    factory = viewModelFactory { initializer { WalletViewModel(walletRepository) } },
-                )
-                WalletScreen(
-                    viewModel = viewModel,
-                    onBuyClick = { navController.navigate(Routes.Trade(TransactionType.BUY)) },
-                    onSellClick = { navController.navigate(Routes.Trade(TransactionType.SELL)) },
-                    onCoinClick = { coinId -> navController.navigate(Routes.Dashboard(coinId)) },
-                )
-            }
-            composable<Routes.Trade> { backStackEntry ->
-                val route = backStackEntry.toRoute<Routes.Trade>()
-                val viewModel: BuySellViewModel = viewModel(
-                    key = "${route.type.name}:${route.preselectedCoinId}",
-                    factory = viewModelFactory {
-                        initializer { BuySellViewModel(walletRepository, route.type, route.preselectedCoinId) }
-                    },
-                )
-                BuySellScreen(
-                    viewModel = viewModel,
-                    onConfirmed = { result ->
-                        navController.navigate(
-                            Routes.TransactionSuccess(
-                                type = result.type,
-                                coinSymbol = result.coinSymbol,
-                                amount = result.amountInCoin,
-                            ),
-                        ) {
-                            popUpTo(Routes.Wallet)
-                        }
-                    },
-                )
-            }
-            composable<Routes.TransactionSuccess> { backStackEntry ->
-                val route = backStackEntry.toRoute<Routes.TransactionSuccess>()
-                TransactionSuccessScreen(
-                    type = route.type,
-                    coinSymbol = route.coinSymbol,
-                    amount = route.amount,
-                    onBackToWallet = { navController.popBackStack(Routes.Wallet, inclusive = false) },
-                )
-            }
-            composable<Routes.Dashboard> { backStackEntry ->
-                val route = backStackEntry.toRoute<Routes.Dashboard>()
-                val viewModel: DashboardViewModel = viewModel(
-                    key = route.coinId,
-                    factory = viewModelFactory { initializer { DashboardViewModel(route.coinId, walletRepository) } },
-                )
-                DashboardScreen(
-                    viewModel = viewModel,
-                    onBack = { navController.popBackStack() },
-                    onBuyClick = {
-                        navController.navigate(Routes.Trade(TransactionType.BUY, preselectedCoinId = route.coinId))
-                    },
-                )
+        CompositionLocalProvider(LocalScaffoldPadding provides innerPadding) {
+            NavHost(
+                navController = navController,
+                startDestination = Routes.Wallet,
+                modifier = Modifier.fillMaxSize(),
+            ) {
+                composable<Routes.Wallet> {
+                    val viewModel: WalletViewModel = viewModel(
+                        factory = viewModelFactory { initializer { WalletViewModel(walletRepository) } },
+                    )
+                    WalletScreen(
+                        viewModel = viewModel,
+                        onBuyClick = { navController.navigate(Routes.Trade(TransactionType.BUY)) },
+                        onSellClick = { navController.navigate(Routes.Trade(TransactionType.SELL)) },
+                        onCoinClick = { coinId -> navController.navigate(Routes.Dashboard(coinId)) },
+                    )
+                }
+                composable<Routes.Trade> { backStackEntry ->
+                    val route = backStackEntry.toRoute<Routes.Trade>()
+                    val viewModel: BuySellViewModel = viewModel(
+                        key = "${route.type.name}:${route.preselectedCoinId}",
+                        factory = viewModelFactory {
+                            initializer {
+                                BuySellViewModel(
+                                    walletRepository,
+                                    route.type,
+                                    route.preselectedCoinId
+                                )
+                            }
+                        },
+                    )
+                    BuySellScreen(
+                        viewModel = viewModel,
+                        onConfirmed = { result ->
+                            navController.navigate(
+                                Routes.TransactionSuccess(
+                                    type = result.type,
+                                    coinSymbol = result.coinSymbol,
+                                    amount = result.amountInCoin,
+                                ),
+                            ) {
+                                popUpTo(Routes.Wallet)
+                            }
+                        },
+                    )
+                }
+                composable<Routes.TransactionSuccess> { backStackEntry ->
+                    val route = backStackEntry.toRoute<Routes.TransactionSuccess>()
+                    TransactionSuccessScreen(
+                        type = route.type,
+                        coinSymbol = route.coinSymbol,
+                        amount = route.amount,
+                        onBackToWallet = {
+                            navController.popBackStack(
+                                Routes.Wallet,
+                                inclusive = false
+                            )
+                        },
+                    )
+                }
+                composable<Routes.Dashboard> { backStackEntry ->
+                    val route = backStackEntry.toRoute<Routes.Dashboard>()
+                    val viewModel: DashboardViewModel = viewModel(
+                        key = route.coinId,
+                        factory = viewModelFactory {
+                            initializer {
+                                DashboardViewModel(
+                                    route.coinId,
+                                    walletRepository
+                                )
+                            }
+                        },
+                    )
+                    DashboardScreen(
+                        viewModel = viewModel,
+                        onBack = { navController.popBackStack() },
+                        onBuyClick = {
+                            navController.navigate(
+                                Routes.Trade(
+                                    TransactionType.BUY,
+                                    preselectedCoinId = route.coinId
+                                )
+                            )
+                        },
+                    )
+                }
             }
         }
     }

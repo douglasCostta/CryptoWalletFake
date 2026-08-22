@@ -54,8 +54,7 @@ fun BottomNavBar(
                     colors = listOf(CryptoDarkOrange, CryptoOrange),
                 ),
             )
-            .navigationBarsPadding()
-            .padding(vertical = 12.dp),
+            .navigationBarsPadding(),
         horizontalArrangement = Arrangement.SpaceEvenly,
     ) {
         BottomNavItem.entries.forEach { item ->
@@ -81,15 +80,16 @@ private fun RowScope.BottomNavBarItem(
 
     Column(
         modifier = Modifier
-            .weight(1f)
+            .padding(all = 1.dp)
             .selectable(selected = selected, onClick = onClick),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(4.dp),
+        verticalArrangement = Arrangement.spacedBy(0.6.dp),
     ) {
         Box(
             modifier = Modifier
                 .size(40.dp)
-                .background(color = indicatorColor, shape = RoundedCornerShape(12.dp)),
+                .background(color = indicatorColor,
+                    shape = RoundedCornerShape(12.dp)),
             contentAlignment = Alignment.Center,
         ) {
             Icon(

@@ -62,9 +62,7 @@ fun TransactionSuccessScreen(
 
     AppBackground1 {
         Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(top = 20.dp, bottom = 20.dp),
+            modifier = Modifier.fillMaxSize(),
         ) {
             Column(
                 modifier = Modifier.fillMaxSize(),

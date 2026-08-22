@@ -13,8 +13,10 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material3.DropdownMenu
@@ -51,10 +53,10 @@ import com.cryptowallet.ui.theme.AuthLabelMuted
 import com.cryptowallet.ui.theme.CryptoDarkOrange
 import com.cryptowallet.ui.theme.WalletTextPrimary
 import com.cryptowallet.view.component.AppBackground1
-import com.cryptowallet.view.component.AppBackground2
 import com.cryptowallet.view.component.AppButton
 import com.cryptowallet.view.component.AppCard
 import com.cryptowallet.view.component.AppPageTitle
+import com.cryptowallet.view.component.CardGradientBrush1
 import com.cryptowallet.viewmodel.BuySellViewModel
 import com.cryptowallet.viewmodel.TradeUiState
 import java.text.NumberFormat
@@ -98,7 +100,7 @@ private fun BuySellContent(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(top = 20.dp, bottom = 20.dp),
+                .verticalScroll(rememberScrollState()),
         ) {
             AppPageTitle(title)
 
@@ -167,46 +169,48 @@ private fun BuySellContent(
             }
 
             Spacer(modifier = Modifier.height(16.dp))
-            AppCard() {
-                AppBackground2() {
-                    Column(modifier = Modifier.padding(20.dp)) {
-                        uiState.balanceBefore?.let { before ->
-                            val ownedBefore =
-                                before.holdings.find { it.coinId == uiState.selectedCoin?.id }?.amount
-                                    ?: 0.0
-                            BalanceSummaryRow(
-                                label = "Balance before",
-                                cash = ReaisFormatter.format(before.cashBalanceReais),
-                                symbol = symbol,
-                                amount = String.format(Locale.US, "%.6f", ownedBefore),
-                            )
-                            Spacer(modifier = Modifier.height(20.dp))
-                        }
-
-                        AmountRow(
-                            label = "Amount in R$",
-                            value = uiState.amountInReais,
-                            onValueChange = onAmountInReaisChanged,
+            AppCard {
+                Column(
+                    modifier = Modifier
+                        .background(brush = CardGradientBrush1)
+                        .padding(20.dp)
+                ) {
+                    uiState.balanceBefore?.let { before ->
+                        val ownedBefore =
+                            before.holdings.find { it.coinId == uiState.selectedCoin?.id }?.amount
+                                ?: 0.0
+                        BalanceSummaryRow(
+                            label = "Balance before",
+                            cash = ReaisFormatter.format(before.cashBalanceReais),
+                            symbol = symbol,
+                            amount = String.format(Locale.US, "%.6f", ownedBefore),
                         )
-                        Spacer(modifier = Modifier.height(16.dp))
-                        AmountRow(
-                            label = "Amount in $symbol",
-                            value = uiState.amountInCoin,
-                            onValueChange = onAmountInCoinChanged,
-                        )
+                        Spacer(modifier = Modifier.height(20.dp))
+                    }
 
-                        uiState.balanceAfter?.let { after ->
-                            val ownedAfter =
-                                after.holdings.find { it.coinId == uiState.selectedCoin?.id }?.amount
-                                    ?: 0.0
-                            Spacer(modifier = Modifier.height(20.dp))
-                            BalanceSummaryRow(
-                                label = "Balance after",
-                                cash = ReaisFormatter.format(after.cashBalanceReais),
-                                symbol = symbol,
-                                amount = String.format(Locale.US, "%.6f", ownedAfter),
-                            )
-                        }
+                    AmountRow(
+                        label = "Amount in R$",
+                        value = uiState.amountInReais,
+                        onValueChange = onAmountInReaisChanged,
+                    )
+                    Spacer(modifier = Modifier.height(16.dp))
+                    AmountRow(
+                        label = "Amount in $symbol",
+                        value = uiState.amountInCoin,
+                        onValueChange = onAmountInCoinChanged,
+                    )
+
+                    uiState.balanceAfter?.let { after ->
+                        val ownedAfter =
+                            after.holdings.find { it.coinId == uiState.selectedCoin?.id }?.amount
+                                ?: 0.0
+                        Spacer(modifier = Modifier.height(20.dp))
+                        BalanceSummaryRow(
+                            label = "Balance after",
+                            cash = ReaisFormatter.format(after.cashBalanceReais),
+                            symbol = symbol,
+                            amount = String.format(Locale.US, "%.6f", ownedAfter),
+                        )
                     }
                 }
             }
@@ -216,13 +220,14 @@ private fun BuySellContent(
                 Text(text = message, color = MaterialTheme.colorScheme.error)
             }
 
-            Spacer(modifier = Modifier.weight(1f))
+            Spacer(modifier = Modifier.height(24.dp))
             AppButton(
                 text = "Confirm",
                 onClick = onConfirmClick,
                 enabled = !uiState.isLoading && uiState.selectedCoin != null && uiState.amountInReais.toDoubleOrNull() != null,
                 modifier = Modifier.fillMaxWidth(),
             )
+            Spacer(modifier = Modifier.height(20.dp))
         }
     }
 }
